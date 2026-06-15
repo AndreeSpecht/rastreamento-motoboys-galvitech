@@ -164,7 +164,7 @@ Desenvolvimento previsto para **18 semanas** ao longo do PAC 8 (2026/2):
 
 ## Pitch e documentação
 
-- **Vídeo (pitch):** [assista no YouTube]()
+- **Vídeo (pitch):** [assista no YouTube](https://www.youtube.com/watch?v=KaN6kuo9GSM)
 - **Artigo completo (PDF):** [Portfólio PAC ESOFT VII](./docs/Portfolio-PAC-VII-Specht.pdf)
 
 ## Autor
