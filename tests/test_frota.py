@@ -54,6 +54,7 @@ def test_filtro_gps(tmp_path):
     vel = f.atualizar_posicao(0, -26.5 + 0.00225, -49.1, ts=1030)  # ~250 m em 30 s = ~30 km/h
     assert 25 < vel < 35
     assert f.atualizar_posicao(0, -26.5, -49.1, ts=1040, vel_dispositivo=42) == 42
+    assert f.atualizar_posicao(0, -26.5001, -49.1, ts=1040) == 42  # mesmo segundo: aceita e mantém velocidade
 
 
 def test_tid_personalizado(tmp_path):

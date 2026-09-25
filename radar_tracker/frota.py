@@ -153,11 +153,14 @@ class Frota:
             moto = self._moto(mid)
             if precisao_m is not None and precisao_m > self.precisao_max_m:
                 return None
-            if moto["last_ts"] and ts <= moto["last_ts"]:
+            if moto["last_ts"] and ts < moto["last_ts"]:
                 return None
-            vel = geo.velocidade_kmh(moto["lat_atual"], moto["lon_atual"], moto["last_ts"], lat, lon, ts)
-            if vel is not None and vel > self.velocidade_max_kmh:
-                return None
+            if moto["last_ts"] and ts == moto["last_ts"]:
+                vel = moto["velocidade"]  # mesma marca de tempo: mantém a última velocidade
+            else:
+                vel = geo.velocidade_kmh(moto["lat_atual"], moto["lon_atual"], moto["last_ts"], lat, lon, ts)
+                if vel is not None and vel > self.velocidade_max_kmh:
+                    return None
             if vel_dispositivo is not None and vel_dispositivo >= 0:
                 vel = float(vel_dispositivo)  # velocidade medida pelo próprio GPS é mais fiel
             if vel is None or vel < 1:
