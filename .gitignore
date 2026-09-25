@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# Configuração local e segredos
+.env
+config/motoboys.json
+
+# Dados de execução (banco e sessão ficam fora do versionamento)
+data/
+*.db
+*.sqlite3
+sessao_*.json
+
+# Binários de túnel (baixar do site oficial — ver docs/instalacao.md)
+tools/
+*.exe
+
+# Arquivos locais do autor / legado
+_legado_local/
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
