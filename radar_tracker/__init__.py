@@ -1,4 +1,4 @@
-"""Módulo de rastreamento em tempo real de motoboys — Galvitech Ltda."""
+"""Sistema de rastreamento em tempo real de motoboys — Galvitech Ltda."""
 
 import logging
 

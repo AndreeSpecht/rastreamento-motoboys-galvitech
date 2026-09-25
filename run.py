@@ -9,7 +9,7 @@ from radar_tracker.config import Config
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Servidor do módulo de rastreamento de motoboys.")
+    parser = argparse.ArgumentParser(description="Servidor do sistema de rastreamento de motoboys.")
     parser.add_argument("--debug", action="store_true", help="modo de desenvolvimento do Flask (recarga automática)")
     parser.add_argument("--no-browser", action="store_true", help="não abrir o navegador ao iniciar")
     parser.add_argument("--port", type=int, default=Config.PORT)

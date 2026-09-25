@@ -2,7 +2,7 @@
 
 > Versão editável em Word: [`Cronograma_Entregas_TCC.docx`](Cronograma_Entregas_TCC.docx)
 
-Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/2026. Uma entrega está concluída quando está no branch `main`, com testes passando no CI e documentação atualizada. As semanas 9 a 18 estão cadastradas como **milestones** no GitHub, com as tarefas em **issues**.
+Entregas **toda sexta-feira** do 8º período, semestre final (2026/2), de 07/08/2026 a 04/12/2026. Uma entrega está concluída quando está no branch `main`, com testes passando no CI e documentação atualizada. As semanas 9 a 18 estão cadastradas como **milestones** no GitHub, com as tarefas em **issues**.
 
 > As entregas das semanas 1 a 8 foram consolidadas e publicadas no repositório em 25/09/2026.
 
@@ -11,8 +11,8 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 | Marco | Data | Descrição | Status |
 |-------|------|-----------|--------|
 | M1 | 28/08/2026 | Requisitos e projeto aprovados | ✅ Concluído |
-| M2 | 25/09/2026 | v0.8.0: módulo funcional, testado e documentado | ✅ Concluído |
-| M3 | 30/10/2026 | v0.9.0: integrado ao ERP e homologado | 🔜 Planejado |
+| M2 | 25/09/2026 | v0.8.0: sistema funcional, testado e documentado | ✅ Concluído |
+| M3 | 30/10/2026 | v0.9.0: rastreador homologado na Radar Auto Peças | 🔜 Planejado |
 | M4 | 20/11/2026 | Avaliação em ambiente real concluída (cronometragem + SUS) | 🔜 Planejado |
 | M5 | 04/12/2026 | v1.0.0 e TCC prontos para a defesa | 🔜 Planejado |
 
@@ -28,13 +28,13 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 | 6 | 11/09/2026 | Rastreamento GPS | Tratamento dos dados de GPS, autenticação e simulador. | radar_tracker/frota.py, scripts/simular_motoboy.py | ✅ Concluída |
 | 7 | 18/09/2026 | Roteirização | Cálculo de rota via OSRM, modo offline e otimização por vizinho mais próximo. | radar_tracker/roteamento.py, geo.py | ✅ Concluída |
 | 8 | 25/09/2026 | Qualidade | Refatoração modular, testes automatizados, CI, documentação e cronograma. | Release v0.8.0 | ✅ Concluída |
-| 9 | 02/10/2026 | Clientes | Importação do cadastro de clientes do ERP da Galvitech. | Milestone "Semana 09" no GitHub | 🔜 Planejada |
-| 10 | 09/10/2026 | Histórico | Vínculo de cada viagem com a NF-e emitida no ERP. | Milestone "Semana 10" | 🔜 Planejada |
+| 9 | 02/10/2026 | Rastreamento GPS | Alertas de status do motoboy: sinal perdido, parado por muito tempo e bateria baixa. | Milestone "Semana 09" no GitHub | 🔜 Planejada |
+| 10 | 09/10/2026 | Entregas | Confirmação de entrega por parada, com horário de chegada em cada cliente. | Milestone "Semana 10" | 🔜 Planejada |
 | 11 | 16/10/2026 | Relatórios | Indicadores de desempenho e melhorias no replay de trilha. | Milestone "Semana 11" | 🔜 Planejada |
-| 12 | 23/10/2026 | Integração ERP | Painel embarcado no ERP com login de operador. | Milestone "Semana 12" | 🔜 Planejada |
-| 13 | 30/10/2026 | Testes | Testes de integração e homologação na Radar Auto Peças. | Release v0.9.0 | 🔜 Planejada |
+| 12 | 23/10/2026 | Segurança | Login de operador no painel e perfis de acesso. | Milestone "Semana 12" | 🔜 Planejada |
+| 13 | 30/10/2026 | Testes | Testes de campo e homologação do rastreador na Radar Auto Peças. | Release v0.9.0 | 🔜 Planejada |
 | 14 | 06/11/2026 | Avaliação | Cronometragem de base (processo atual) e treinamento da equipe. | Planilha de medições (baseline) | 🔜 Planejada |
-| 15 | 13/11/2026 | Avaliação | Piloto em ambiente real com cronometragem usando o módulo. | Planilha de medições (piloto) | 🔜 Planejada |
+| 15 | 13/11/2026 | Avaliação | Piloto em ambiente real com cronometragem usando o sistema. | Planilha de medições (piloto) | 🔜 Planejada |
 | 16 | 20/11/2026 | Avaliação | Aplicação do questionário SUS e ajustes finais de usabilidade. | Resultado SUS | 🔜 Planejada |
 | 17 | 27/11/2026 | TCC | Análise dos resultados e redação do artigo do TCC. | Artigo (versão para revisão) | 🔜 Planejada |
 | 18 | 04/12/2026 | Defesa | Revisão final, versão 1.0.0 e preparação da defesa. | Release v1.0.0 + artigo final | 🔜 Planejada |
@@ -57,7 +57,7 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 
 - Validação dos RF/RNF com a Galvitech
 - Definição das regras de negócio (nota obrigatória, rota travada em entrega)
-- Priorização dos submódulos
+- Priorização das funcionalidades
 
 **Evidência:** docs/requisitos.md · **Status:** Concluída
 
@@ -121,23 +121,23 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 
 **Evidência:** Release v0.8.0 · **Status:** Concluída
 
-### Semana 09 · 02/10/2026 · Clientes
+### Semana 09 · 02/10/2026 · Rastreamento GPS
 
-**Entrega:** Importação do cadastro de clientes do ERP da Galvitech.
+**Entrega:** Alertas de status do motoboy: sinal perdido, parado por muito tempo e bateria baixa.
 
-- Mapear a tabela de clientes do ERP
-- Importação (CSV/consulta) com geocodificação dos endereços
-- Tratamento de clientes sem coordenadas
+- Detectar motoboy sem sinal (última posição antiga)
+- Alerta de parada prolongada fora de um cliente
+- Nível de bateria enviado pelo OwnTracks (campo batt)
 
 **Evidência:** Milestone "Semana 09" no GitHub · **Status:** Planejada
 
-### Semana 10 · 09/10/2026 · Histórico
+### Semana 10 · 09/10/2026 · Entregas
 
-**Entrega:** Vínculo de cada viagem com a NF-e emitida no ERP.
+**Entrega:** Confirmação de entrega por parada, com horário de chegada em cada cliente.
 
-- Consulta da NF-e pelo número informado
-- Validação da nota antes da saída
-- Histórico com cliente e valor da nota
+- Marcar cada parada como entregue no painel
+- Registrar o horário de chegada por cliente
+- Histórico detalhado por parada
 
 **Evidência:** Milestone "Semana 10" · **Status:** Planejada
 
@@ -145,28 +145,28 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 
 **Entrega:** Indicadores de desempenho e melhorias no replay de trilha.
 
-- Entregas por motoboy e tempo médio de rota
+- Entregas por motoboy, tempo médio de rota e km rodados
 - Replay com velocidade e paradas
 - Exportação Excel com indicadores
 
 **Evidência:** Milestone "Semana 11" · **Status:** Planejada
 
-### Semana 12 · 23/10/2026 · Integração ERP
+### Semana 12 · 23/10/2026 · Segurança
 
-**Entrega:** Painel embarcado no ERP com login de operador.
+**Entrega:** Login de operador no painel e perfis de acesso.
 
-- Autenticação com usuários do ERP
-- Incorporação do painel na interface do ERP
+- Autenticação de usuários do painel
 - Perfis de acesso (operador / gestor)
+- Proteção das rotas da API e acesso externo via HTTPS
 
 **Evidência:** Milestone "Semana 12" · **Status:** Planejada
 
 ### Semana 13 · 30/10/2026 · Testes
 
-**Entrega:** Testes de integração e homologação na Radar Auto Peças.
+**Entrega:** Testes de campo e homologação do rastreador na Radar Auto Peças.
 
-- Testes de integração ERP ↔ módulo
-- Homologação com o operador
+- Testes de campo com os motoboys
+- Homologação com o operador de expedição
 - Correções e versão v0.9.0
 
 **Evidência:** Release v0.9.0 · **Status:** Planejada
@@ -175,7 +175,7 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 
 **Entrega:** Cronometragem de base (processo atual) e treinamento da equipe.
 
-- Medir o tempo de planejamento de rotas sem o módulo
+- Medir o tempo de planejamento de rotas sem o sistema
 - Treinamento dos operadores e motoboys
 - Configuração do OwnTracks nos celulares
 
@@ -183,10 +183,10 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 
 ### Semana 15 · 13/11/2026 · Avaliação
 
-**Entrega:** Piloto em ambiente real com cronometragem usando o módulo.
+**Entrega:** Piloto em ambiente real com cronometragem usando o sistema.
 
 - Operação real por uma semana
-- Medir o tempo de planejamento com o módulo
+- Medir o tempo de planejamento com o sistema
 - Registro de incidentes e ajustes
 
 **Evidência:** Planilha de medições (piloto) · **Status:** Planejada
@@ -215,7 +215,7 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 
 **Entrega:** Revisão final, versão 1.0.0 e preparação da defesa.
 
-- Revisão com o orientador
+- Revisão com a professora
 - Release v1.0.0 no GitHub
 - Slides, vídeo e ensaio da apresentação
 
@@ -227,7 +227,7 @@ Entregas **toda sexta-feira** ao longo do PAC 8 (2026/2), de 07/08/2026 a 04/12/
 |-------|:-------------:|-----------|
 | Instabilidade do OSRM público | Média | Fallback offline já implementado; opção de hospedar OSRM próprio (OSRM_URL). |
 | Qualidade do GPS nos celulares | Alta | Filtro de precisão/saltos; uso da velocidade do aparelho; orientação sobre economia de bateria. |
-| Acesso ao banco do ERP legado | Média | Camada db.py isolada; importação via CSV como alternativa à consulta direta. |
+| Queda de internet ou do computador da loja | Média | Sessão gravada em disco e retomada no reinício; modo offline de rotas; backup da pasta data/. |
 | Baixa adesão dos motoboys ao app | Média | Treinamento na semana 14; OwnTracks com configuração única e uso passivo. |
 | Amostra pequena para o SUS | Alta | Incluir operadores, gestor e motoboys; registrar como limitação no TCC. |
 | Atraso em alguma entrega semanal | Média | Folga nas semanas 11 e 17; escopo de relatórios pode ser reduzido sem afetar a avaliação. |

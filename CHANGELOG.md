@@ -4,7 +4,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 
 ## [Não lançado]
 
-Planejado (ver [cronograma](docs/cronograma.md)): importação de clientes e NF-e do ERP, indicadores, login de operador, homologação e avaliação em ambiente real.
+Planejado (ver [cronograma](docs/cronograma.md)): alertas de status, confirmação de entrega por parada, indicadores, login de operador, homologação e avaliação em ambiente real.
 
 ## [0.8.0] - 2026-09-25 (entrega da semana 8)
 

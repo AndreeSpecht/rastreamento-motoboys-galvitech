@@ -1,12 +1,12 @@
 # Histórico de desenvolvimento
 
-Este documento registra como o módulo evoluiu, as decisões tomadas em cada etapa e os problemas encontrados. Ele complementa o [cronograma](cronograma.md) e o [portfólio do PAC ESOFT VII](Portfolio-PAC-VII-Specht.pdf).
+Este documento registra como o sistema evoluiu, as decisões tomadas em cada etapa e os problemas encontrados. Ele complementa o [cronograma](cronograma.md).
 
 ## Metodologia
 
 O projeto segue a **Design Science Research** (Hevner et al., 2004), em ciclos de construção e avaliação do artefato:
 
-1. **Relevância**: problema real observado na Radar Auto Peças, cliente da Galvitech. O ERP não tem controle de entregas por motoboy.
+1. **Relevância**: problema real observado na Radar Auto Peças, onde o despacho de motoboys era manual, sem rastreamento nem histórico.
 2. **Rigor**: base em trabalhos correlatos (otimização de rotas, pilha OpenStreetMap/Leaflet, tratamento de GPS) e em soluções de mercado (Vuupt, Loggi, Foody Delivery).
 3. **Design**: implementação incremental, com entregas semanais às sextas-feiras.
 4. **Avaliação**: cronometragem do planejamento de rotas (antes/depois) e questionário SUS.
@@ -74,7 +74,7 @@ O simulador expôs um caso real durante os testes: duas leituras no mesmo segund
 
 ## Próximas fases
 
-Veja o [cronograma](cronograma.md): integração com o cadastro de clientes e NF-e do ERP, indicadores, login de operador, homologação, avaliação em ambiente real (cronometragem + SUS) e redação final do TCC.
+Veja o [cronograma](cronograma.md): alertas de status, confirmação de entrega por parada, indicadores, login de operador, homologação, avaliação em ambiente real (cronometragem + SUS) e redação final do TCC.
 
 ## Como contribuir / padrão de trabalho
 

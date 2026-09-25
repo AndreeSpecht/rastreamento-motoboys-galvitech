@@ -1,4 +1,4 @@
-"""Configuração do módulo, lida de variáveis de ambiente (arquivo .env opcional)."""
+"""Configuração do sistema, lida de variáveis de ambiente (arquivo .env opcional)."""
 
 import json
 import os

@@ -1,6 +1,6 @@
-# Requisitos do módulo
+# Requisitos do sistema
 
-Requisitos levantados com a Galvitech Ltda e com a Radar Auto Peças (empresa cliente usada como piloto), a partir do processo de despacho de motoboys e do portfólio do PAC ESOFT VII. A coluna **Status** mostra o que já existe na versão 0.8.0.
+Requisitos levantados pela Galvitech Ltda com a equipe da Radar Auto Peças, a partir do processo de despacho de motoboys da loja. A coluna **Status** mostra o que já existe na versão 0.8.0.
 
 ## Atores
 
@@ -12,7 +12,7 @@ Requisitos levantados com a Galvitech Ltda e com a Radar Auto Peças (empresa cl
 
 ## Requisitos funcionais
 
-| ID | Requisito | Submódulo | Status |
+| ID | Requisito | Área | Status |
 |----|-----------|-----------|--------|
 | RF01 | Exibir no mapa a posição atual de todos os motoboys, atualizada a cada 2 s. | Rastreamento | ✅ |
 | RF02 | Receber posições GPS enviadas pelo app OwnTracks (modo HTTP). | Rastreamento | ✅ |
@@ -28,10 +28,12 @@ Requisitos levantados com a Galvitech Ltda e com a Radar Auto Peças (empresa cl
 | RF12 | Registrar cada viagem (motoboy, data, saída, chegada, destinos, nota). | Histórico | ✅ |
 | RF13 | Filtrar o histórico por período e exportar em Excel. | Histórico | ✅ |
 | RF14 | Reproduzir (replay) a trilha percorrida por um motoboy em um dia. | Replay | ✅ |
-| RF15 | Importar o cadastro de clientes diretamente do ERP da Galvitech. | Integração ERP | 🔜 semana 9 |
-| RF16 | Vincular a viagem à NF-e emitida no ERP (consulta pelo número). | Integração ERP | 🔜 semana 10 |
-| RF17 | Painel de indicadores (entregas por motoboy, tempo médio de rota). | Relatórios | 🔜 semana 11 |
-| RF18 | Acesso ao painel com login de usuário do ERP. | Integração ERP | 🔜 semana 12 |
+| RF15 | Alertar quando um motoboy perder o sinal, ficar parado por muito tempo ou estiver com bateria baixa. | Rastreamento | 🔜 semana 9 |
+| RF16 | Confirmar a entrega em cada parada, registrando o horário de chegada ao cliente. | Histórico | 🔜 semana 10 |
+| RF17 | Painel de indicadores (entregas por motoboy, tempo médio de rota, km rodados). | Relatórios | 🔜 semana 11 |
+| RF18 | Acesso ao painel com login de operador e perfis (operador / gestor). | Segurança | 🔜 semana 12 |
+
+**Fora do escopo:** integração com outros sistemas de gestão da loja. O sistema é independente: os clientes são cadastrados nele e o número da nota é informado manualmente pelo operador.
 
 ## Requisitos não funcionais
 

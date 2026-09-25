@@ -49,7 +49,7 @@ O motoboy não precisa de um app próprio: o **OwnTracks** (gratuito, Android/iO
 | `radar_tracker/db.py` | Esquema SQLite, migrações leves e consultas parametrizadas. | sqlite3 |
 | `radar_tracker/templates`, `static` | Painel web (HTML, CSS, JS com Leaflet). | — |
 
-As funções de `geo.py` não têm dependências, o que permite testá-las isoladamente. A `Frota` não conhece HTTP nem SQL. Por isso a troca do SQLite por outro banco, ou a integração com o ERP, fica restrita a `db.py`.
+As funções de `geo.py` não têm dependências, o que permite testá-las isoladamente. A `Frota` não conhece HTTP nem SQL. Por isso uma eventual troca do SQLite por outro banco fica restrita a `db.py`.
 
 ## Ciclo de vida de uma entrega
 
@@ -110,4 +110,4 @@ A partir da posição atual do motoboy (ou da loja), o algoritmo escolhe sempre 
 
 - O servidor OSRM público tem limite de uso justo. Em produção com muitas lojas, recomenda-se hospedar um OSRM próprio com o recorte de SC.
 - O estado da frota fica em um único processo (sem suporte a múltiplas instâncias do servidor).
-- O painel ainda não tem autenticação de operador (planejado para a integração com o ERP, semana 12). Não exponha o painel publicamente sem um túnel com controle de acesso.
+- O painel ainda não tem autenticação de operador (planejada para a semana 12). Não exponha o painel publicamente sem um túnel com controle de acesso.

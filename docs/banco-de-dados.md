@@ -22,7 +22,7 @@ erDiagram
         TEXT hora_saida
         TEXT hora_chegada
         TEXT destinos "nomes separados por vírgula"
-        TEXT numero_nota "NF-e / pedido"
+        TEXT numero_nota "nota / pedido (digitado)"
     }
     TRACKLOG {
         INTEGER id PK

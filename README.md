@@ -1,6 +1,6 @@
-# Módulo de Rastreamento em Tempo Real de Motoboys
+# Sistema de Rastreamento em Tempo Real de Motoboys
 
-Módulo de rastreamento, roteirização e histórico de entregas **embarcado no ERP da Galvitech Ltda**, construído sobre tecnologias abertas e sem custos de licenciamento. O piloto roda na **Radar Auto Peças** (Jaraguá do Sul/SC).
+Sistema de rastreamento, roteirização e histórico de entregas por motoboy da **Radar Auto Peças** (Jaraguá do Sul/SC), desenvolvido pela **Galvitech Ltda** com tecnologias abertas e sem custos de licenciamento.
 
 [![Testes](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/actions/workflows/testes.yml/badge.svg)](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/actions/workflows/testes.yml)
 ![Versão](https://img.shields.io/badge/vers%C3%A3o-0.8.0-blue?style=flat-square)
@@ -11,9 +11,9 @@ Módulo de rastreamento, roteirização e histórico de entregas **embarcado no 
 ![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=flat-square&logo=leaflet&logoColor=white)
 ![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=flat-square&logo=openstreetmap&logoColor=white)
 
-> **Trabalho de Conclusão de Curso · PAC ESOFT VII / PAC 8**
+> **Trabalho de Conclusão de Curso · 8º período (semestre final, 2026/2)**
 > Engenharia de Software · Centro Universitário Católica de Santa Catarina
-> Autor: **André Gustavo Specht** · Orientador: **Prof. Andrei Carniel**
+> Autor: **André Gustavo Specht** · Professora: **Prof.ª Jessica Aline Karsten**
 
 ---
 
@@ -22,7 +22,7 @@ Módulo de rastreamento, roteirização e histórico de entregas **embarcado no 
 - [Início rápido](#início-rápido)
 - [Funcionalidades](#funcionalidades)
 - [Contexto e problema](#contexto-e-problema)
-- [Proposta e diferencial](#proposta-e-diferencial)
+- [Proposta, escopo e diferencial](#proposta-escopo-e-diferencial)
 - [Arquitetura](#arquitetura)
 - [Tecnologias](#tecnologias)
 - [Estrutura do repositório](#estrutura-do-repositório)
@@ -66,35 +66,38 @@ Instalação manual, túnel para os celulares (ngrok) e configuração do app Ow
 
 ## Funcionalidades
 
-| # | Submódulo | O que faz | Status |
+| # | Funcionalidade | O que faz | Status |
 |---|-----------|-----------|--------|
 | 1 | **Rastreamento GPS em tempo real** | Mostra todos os motoboys no mapa, com nome e velocidade, atualizando a cada 2 s a partir do app OwnTracks. Leituras imprecisas ou com saltos impossíveis são descartadas. | ✅ |
 | 2 | **Gestão e otimização de rotas** | Monta a rota por cliente cadastrado, busca de endereço ou clique no mapa. Calcula trajeto e tempo pelo OSRM, otimiza pela heurística do vizinho mais próximo e tem modo offline. | ✅ |
-| 3 | **Cadastro de clientes** | Cadastro georreferenciado com telefone e cor. Importação do ERP prevista para a semana 9. | ✅ / 🔜 |
+| 3 | **Cadastro de clientes** | Cadastro georreferenciado com telefone e cor, feito no próprio sistema (clique no mapa ou busca de endereço). | ✅ |
 | 4 | **Histórico de viagens** | Cada entrega exige o nº da nota e é registrada com motoboy, horários e destinos. Filtro por período e exportação Excel. | ✅ |
 | 5 | **Replay de trilha** | Reproduz o percurso do motoboy em um dia, para auditoria e avaliação. | ✅ |
 
 ## Contexto e problema
 
-A **Galvitech Ltda** é uma empresa de Jaraguá do Sul/SC especializada em ERP para o setor de autopeças. Boa parte de seus clientes depende de **entregas por motoboys**, mas o ERP **não tem nenhum módulo para essa atividade**. Não há rastreamento, cálculo de rotas nem registro estruturado das viagens. As consequências são:
+A **Radar Auto Peças** faz boa parte das suas vendas com **entrega por motoboy**. O despacho era manual: não havia rastreamento dos entregadores, cálculo de rotas nem registro estruturado das viagens, e a situação de cada motoboy era acompanhada por telefone ou WhatsApp. As consequências eram:
 
-- impossibilidade de informar **prazos confiáveis** ao cliente final;
+- impossibilidade de informar **prazos confiáveis** ao cliente;
 - dificuldade de **alocar o motoboy mais próximo**;
 - **ausência de histórico** para avaliação de desempenho;
-- **perda de rastreabilidade** entre entregas e notas fiscais.
+- **perda de rastreabilidade** das entregas e das notas despachadas.
 
-> **Pergunta de pesquisa:** *em que medida um módulo de rastreamento em tempo real integrado ao ERP da Galvitech Ltda é capaz de suprir essa lacuna operacional e aumentar a eficiência na gestão de entregas por motoboys pelas empresas clientes?*
+> **Pergunta de pesquisa:** *em que medida um sistema de rastreamento em tempo real de motoboys, construído com tecnologias abertas, é capaz de reduzir o tempo de planejamento de rotas e aumentar a eficiência e a rastreabilidade das entregas da Radar Auto Peças?*
 
-## Proposta e diferencial
+## Proposta, escopo e diferencial
 
-O módulo fica **embarcado no próprio ERP**, usa **apenas tecnologias abertas** e:
+Um **sistema web independente**, instalado no computador da loja, que:
 
-- herda o **cadastro de clientes** e o **vínculo com a nota fiscal**;
-- registra **histórico estruturado** e oferece **replay de trilha**;
-- funciona mesmo com o serviço de rotas fora do ar (**modo offline**);
+- mostra os motoboys no mapa em **tempo real** a partir do celular (app OwnTracks);
+- calcula e **otimiza rotas**, com **modo offline** se o serviço de rotas cair;
+- registra um **histórico estruturado** de cada viagem com o **número da nota/pedido** digitado pelo operador;
+- oferece **replay de trilha** e exportação em Excel;
 - é validado em ambiente real com o questionário **SUS**.
 
-Plataformas SaaS como Vuupt, Loggi e Foody Delivery confirmam a demanda, mas são serviços externos com mensalidade, voltados a outros setores e **não integrados ao ERP nem ao fluxo de nota fiscal de autopeças**. Com elas, o cliente teria que operar em dois sistemas diferentes. A integração nativa elimina essa fragmentação.
+**Escopo:** o trabalho abrange somente o sistema de rastreamento. Ele funciona de forma independente e não depende nem se integra a outros sistemas de gestão da loja: os clientes são cadastrados no próprio sistema e o número da nota é informado manualmente.
+
+Plataformas SaaS como Vuupt, Loggi e Foody Delivery confirmam a demanda, mas cobram mensalidade, hospedam os dados em nuvem de terceiros e são voltadas a outros setores. Este sistema usa apenas software livre e roda na própria loja, sem custo de licença.
 
 ## Arquitetura
 
@@ -107,15 +110,13 @@ flowchart LR
         DB[("SQLite<br/>clientes · histórico · trilha")]
     end
     OSRM["OSRM + OpenStreetMap<br/>(rotas)"]
-    WEB["🖥️ Painel web (Leaflet.js)<br/>embutido no ERP"]
-    ERP["ERP Galvitech<br/>clientes · NF-e"]
+    WEB["🖥️ Painel web (Leaflet.js)<br/>operador da loja"]
 
     APP -- "posição GPS (HTTP, ~2 s)" --> API
     WEB <-->|"REST (poll 2 s)"| API
     API --> FROTA
     API --> DB
     API <-->|"trajeto e tempo"| OSRM
-    ERP -.->|"integração (semanas 9–12)"| DB
 ```
 
 Detalhes, diagramas de estado e sequência e as decisões de projeto estão em [docs/arquitetura.md](docs/arquitetura.md).
@@ -184,13 +185,13 @@ Resultados esperados:
 
 - redução do **tempo médio de planejamento de rotas**;
 - **dados operacionais estruturados** (posição em tempo real, sequência otimizada de paradas, histórico de viagens);
-- **rastreabilidade ponta a ponta** das entregas vinculada à nota fiscal;
+- **rastreabilidade** das entregas, com o número da nota/pedido registrado no histórico;
 - escore **SUS "bom" ou superior** (≥ 71);
-- aumento do **valor competitivo do ERP** frente a plataformas SaaS.
+- uma alternativa **sem mensalidade** às plataformas SaaS de entrega.
 
 ## Cronograma de entregas
 
-Entregas **toda sexta-feira** do PAC 8 (07/08 a 04/12/2026). Documento completo e editável: **[docs/Cronograma_Entregas_TCC.docx](docs/Cronograma_Entregas_TCC.docx)** · versão web: [docs/cronograma.md](docs/cronograma.md). As semanas futuras estão nos [milestones do GitHub](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/milestones).
+Entregas **toda sexta-feira** do semestre final (07/08 a 04/12/2026). Documento completo e editável: **[docs/Cronograma_Entregas_TCC.docx](docs/Cronograma_Entregas_TCC.docx)** · versão web: [docs/cronograma.md](docs/cronograma.md). As semanas futuras estão nos [milestones do GitHub](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/milestones).
 
 | Sem. | Sexta | Entrega | Status |
 |:---:|:---:|---|:---:|
@@ -199,11 +200,11 @@ Entregas **toda sexta-feira** do PAC 8 (07/08 a 04/12/2026). Documento completo 
 | 5–6 | 04/09 – 11/09 | Rastreamento GPS (OwnTracks), filtro de GPS e simulador | ✅ |
 | 7 | 18/09 | Roteirização OSRM + vizinho mais próximo + offline | ✅ |
 | 8 | 25/09 | Refatoração, testes, CI e documentação · **v0.8.0** | ✅ |
-| 9 | 02/10 | Importação do cadastro de clientes do ERP | 🔜 |
-| 10 | 09/10 | Vínculo da viagem com a NF-e do ERP | 🔜 |
+| 9 | 02/10 | Alertas: sinal perdido, parada prolongada e bateria baixa | 🔜 |
+| 10 | 09/10 | Confirmação de entrega por parada (horário em cada cliente) | 🔜 |
 | 11 | 16/10 | Indicadores de desempenho e replay aprimorado | 🔜 |
-| 12 | 23/10 | Painel embarcado no ERP + login de operador | 🔜 |
-| 13 | 30/10 | Testes de integração e homologação · **v0.9.0** | 🔜 |
+| 12 | 23/10 | Login de operador e perfis de acesso | 🔜 |
+| 13 | 30/10 | Testes de campo e homologação na loja · **v0.9.0** | 🔜 |
 | 14–16 | 06/11 – 20/11 | Avaliação real: cronometragem e SUS | 🔜 |
 | 17 | 27/11 | Análise dos resultados e escrita do TCC | 🔜 |
 | 18 | 04/12 | Revisão final e defesa · **v1.0.0** | 🔜 |
@@ -220,8 +221,6 @@ Entregas **toda sexta-feira** do PAC 8 (07/08 a 04/12/2026). Documento completo 
 | [docs/desenvolvimento.md](docs/desenvolvimento.md) | Histórico do desenvolvimento, do protótipo à versão atual |
 | [docs/cronograma.md](docs/cronograma.md) | Cronograma detalhado de entregas |
 | [CHANGELOG.md](CHANGELOG.md) | Mudanças por versão |
-| [Portfólio PAC ESOFT VII (PDF)](docs/Portfolio-PAC-VII-Specht.pdf) | Artigo da proposta |
-| [Pitch (YouTube)](https://www.youtube.com/watch?v=KaN6kuo9GSM) | Vídeo de apresentação |
 
 ## Autor
 
@@ -231,4 +230,4 @@ Proprietário da Galvitech Ltda
 
 ---
 
-<sub>Projeto acadêmico desenvolvido no PAC ESOFT VII e PAC 8. Orientação: Prof. Andrei Carniel.</sub>
+<sub>Trabalho de Conclusão de Curso · Engenharia de Software · 8º período (2026/2). Professora: Prof.ª Jessica Aline Karsten.</sub>
