@@ -17,11 +17,13 @@ class MotoboyNaoEncontrado(KeyError):
 
 
 class Frota:
-    def __init__(self, motoboys, base_lat, base_lon, arquivo_sessao):
+    def __init__(self, motoboys, base_lat, base_lon, arquivo_sessao, precisao_max_m=100, velocidade_max_kmh=150):
         self.motoboys = {m["id"]: m for m in motoboys}
         self.por_tid = {str(m["tid"]): m["id"] for m in motoboys}
         self.base = {"lat": base_lat, "lon": base_lon}
         self.arquivo_sessao = str(arquivo_sessao)
+        self.precisao_max_m = precisao_max_m
+        self.velocidade_max_kmh = velocidade_max_kmh
         self._lock = threading.RLock()
         self.estado = {mid: self._estado_inicial() for mid in self.motoboys}
 
@@ -139,14 +141,27 @@ class Frota:
         return viagem
 
     # --- GPS ---
-    def atualizar_posicao(self, mid, lat, lon, ts=None):
-        """Aplica uma leitura de GPS e devolve a velocidade calculada (km/h)."""
+    def atualizar_posicao(self, mid, lat, lon, ts=None, precisao_m=None, vel_dispositivo=None):
+        """Aplica uma leitura de GPS após filtrá-la.
+
+        Descarta leituras com precisão pior que `precisao_max_m`, fora de ordem
+        (timestamp anterior ao último aceito) ou que impliquem um salto acima de
+        `velocidade_max_kmh`. Retorna a velocidade (km/h) ou None se descartada.
+        """
         ts = int(ts or time.time())
         with self._lock:
             moto = self._moto(mid)
+            if precisao_m is not None and precisao_m > self.precisao_max_m:
+                return None
+            if moto["last_ts"] and ts <= moto["last_ts"]:
+                return None
             vel = geo.velocidade_kmh(moto["lat_atual"], moto["lon_atual"], moto["last_ts"], lat, lon, ts)
-            if vel is None or vel > 120 or vel < 1:
-                vel = 0
+            if vel is not None and vel > self.velocidade_max_kmh:
+                return None
+            if vel_dispositivo is not None and vel_dispositivo >= 0:
+                vel = float(vel_dispositivo)  # velocidade medida pelo próprio GPS é mais fiel
+            if vel is None or vel < 1:
+                vel = 0.0
             moto.update(lat_atual=lat, lon_atual=lon, velocidade=round(vel, 1), last_ts=ts)
         self.salvar()
         return vel

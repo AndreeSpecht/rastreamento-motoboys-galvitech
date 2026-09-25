@@ -1,5 +1,6 @@
 """Rotas HTTP: interface web, API REST do painel e endpoint do OwnTracks."""
 
+import hmac
 import io
 import logging
 import time
@@ -133,23 +134,42 @@ def buscar():
 
 
 # --- GPS (OwnTracks, modo HTTP) ---
+def _owntracks_autorizado():
+    """Se OWNTRACKS_TOKEN estiver definido, exige-o como senha (HTTP Basic) ou header X-Token."""
+    token = _cfg().OWNTRACKS_TOKEN
+    if not token:
+        return True
+    auth = request.authorization
+    enviado = (auth.password if auth else None) or request.headers.get("X-Token", "")
+    return hmac.compare_digest(str(enviado), token)
+
+
+def _numero(valor):
+    try:
+        return float(valor)
+    except (TypeError, ValueError):
+        return None
+
+
 @bp.route("/api/gps/owntracks", methods=["POST"])
 def gps_owntracks():
+    if not _owntracks_autorizado():
+        return jsonify({"erro": "Não autorizado."}), 401
     d = request.get_json(silent=True) or {}
     if d.get("_type") != "location":
         return jsonify([])  # OwnTracks espera uma lista (vazia) como resposta
     frota = _frota()
     mid = frota.id_por_tid(d.get("tid", ""))
-    try:
-        lat, lon = float(d["lat"]), float(d["lon"])
-    except (KeyError, TypeError, ValueError):
-        return jsonify([])
-    if mid is None:
-        log.info("OwnTracks: tid desconhecido %r ignorado.", d.get("tid"))
+    lat, lon = _numero(d.get("lat")), _numero(d.get("lon"))
+    if mid is None or lat is None or lon is None:
+        log.info("OwnTracks: leitura ignorada (tid=%r).", d.get("tid"))
         return jsonify([])
     ts = int(d.get("tst") or time.time())
-    vel = frota.atualizar_posicao(mid, lat, lon, ts)
-    _banco().registrar_posicao(mid, lat, lon, vel, ts)
+    vel = frota.atualizar_posicao(mid, lat, lon, ts, precisao_m=_numero(d.get("acc")), vel_dispositivo=_numero(d.get("vel")))
+    if vel is None:
+        log.info("OwnTracks: leitura descartada pelo filtro (moto %s, acc=%s).", mid, d.get("acc"))
+    else:
+        _banco().registrar_posicao(mid, lat, lon, vel, ts)
     return jsonify([])
 
 

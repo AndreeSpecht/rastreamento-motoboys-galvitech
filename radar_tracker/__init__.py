@@ -20,7 +20,14 @@ def create_app(config=None, motoboys=None):
     banco = Banco(cfg.DB_PATH)
     banco.inicializar()
 
-    frota = Frota(motoboys or carregar_motoboys(), cfg.BASE_LAT, cfg.BASE_LON, cfg.ARQUIVO_SESSAO)
+    frota = Frota(
+        motoboys or carregar_motoboys(),
+        cfg.BASE_LAT,
+        cfg.BASE_LON,
+        cfg.ARQUIVO_SESSAO,
+        precisao_max_m=cfg.GPS_PRECISAO_MAX_M,
+        velocidade_max_kmh=cfg.GPS_VELOCIDADE_MAX_KMH,
+    )
     frota.carregar()
 
     app = Flask(__name__)
