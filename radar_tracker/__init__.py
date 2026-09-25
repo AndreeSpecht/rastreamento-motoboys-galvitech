@@ -8,7 +8,7 @@ from .config import Config, carregar_motoboys
 from .db import Banco
 from .frota import Frota
 
-__version__ = "1.0.0"
+__version__ = "0.8.0"
 
 
 def create_app(config=None, motoboys=None):
