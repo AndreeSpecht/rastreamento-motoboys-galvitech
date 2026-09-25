@@ -1,15 +1,17 @@
 # Módulo de Rastreamento em Tempo Real de Motoboys
 
-Módulo de rastreamento, roteirização e histórico de entregas **embarcado no ERP da Galvitech Ltda**, construído sobre tecnologias abertas e sem custos de licenciamento.
+Módulo de rastreamento, roteirização e histórico de entregas **embarcado no ERP da Galvitech Ltda**, construído sobre tecnologias abertas e sem custos de licenciamento. O piloto roda na **Radar Auto Peças** (Jaraguá do Sul/SC).
 
-![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=for-the-badge)
-![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white)
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)
-![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=for-the-badge&logo=openstreetmap&logoColor=white)
+[![Testes](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/actions/workflows/testes.yml/badge.svg)](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/actions/workflows/testes.yml)
+![Versão](https://img.shields.io/badge/vers%C3%A3o-0.8.0-blue?style=flat-square)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?style=flat-square&logo=flask&logoColor=white)
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white)
+![Leaflet](https://img.shields.io/badge/Leaflet-199900?style=flat-square&logo=leaflet&logoColor=white)
+![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-7EBC6F?style=flat-square&logo=openstreetmap&logoColor=white)
 
-> **Trabalho de Conclusão de Curso — PAC ESOFT VII**
+> **Trabalho de Conclusão de Curso · PAC ESOFT VII / PAC 8**
 > Engenharia de Software · Centro Universitário Católica de Santa Catarina
 > Autor: **André Gustavo Specht** · Orientador: **Prof. Andrei Carniel**
 
@@ -17,162 +19,216 @@ Módulo de rastreamento, roteirização e histórico de entregas **embarcado no 
 
 ## Sumário
 
-- [Contexto](#contexto)
-- [Problema](#problema)
-- [Proposta de solução](#proposta-de-solução)
-- [Inovação e diferencial](#inovação-e-diferencial)
-- [Necessidade de mercado](#necessidade-de-mercado)
+- [Início rápido](#início-rápido)
+- [Funcionalidades](#funcionalidades)
+- [Contexto e problema](#contexto-e-problema)
+- [Proposta e diferencial](#proposta-e-diferencial)
 - [Arquitetura](#arquitetura)
-- [Funcionalidades (submódulos)](#funcionalidades-submódulos)
 - [Tecnologias](#tecnologias)
-- [Metodologia](#metodologia)
-- [Resultados esperados](#resultados-esperados)
-- [Cronograma](#cronograma)
-- [Status do projeto](#status-do-projeto)
-- [Pitch e documentação](#pitch-e-documentação)
+- [Estrutura do repositório](#estrutura-do-repositório)
+- [Configuração](#configuração)
+- [Testes](#testes)
+- [Metodologia e resultados esperados](#metodologia-e-resultados-esperados)
+- [Cronograma de entregas](#cronograma-de-entregas)
+- [Documentação](#documentação)
 - [Autor](#autor)
 
 ---
 
-## Contexto
+## Início rápido
 
-A **Galvitech Ltda** é uma empresa de Jaraguá do Sul/SC especializada na prestação de serviços de ERP para o setor de autopeças. Boa parte de seus clientes tem a operação fortemente apoiada em **entregas realizadas por motoboys**.
+Pré-requisito: **Python 3.10+** ([download](https://www.python.org/downloads/); no Windows marque *Add python.exe to PATH*).
 
-No entanto, o ERP **não dispõe de nenhum módulo voltado a essa atividade**: não há rastreamento em tempo real dos entregadores, não há cálculo de rotas otimizadas e as viagens não são registradas de forma estruturada. Na prática, o acompanhamento das entregas é feito de modo manual ou por aplicativos de terceiros desconectados do sistema de gestão.
+**Windows**
 
-## Problema
+```bat
+git clone https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech.git
+cd rastreamento-motoboys-galvitech
+instalar.bat
+iniciar.bat
+```
 
-A ausência desse módulo gera consequências diretas para os clientes:
+**Linux / macOS**
 
-- Impossibilidade de informar **prazos confiáveis** ao cliente final;
-- Dificuldade de **alocar o motoboy mais próximo** de cada entrega;
-- **Ausência de histórico** estruturado para avaliação de desempenho;
-- **Perda de rastreabilidade** entre as entregas e as respectivas notas fiscais.
+```bash
+git clone https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech.git
+cd rastreamento-motoboys-galvitech
+./instalar.sh && ./iniciar.sh
+```
 
-Além disso, essa lacuna representa uma limitação competitiva frente a soluções especializadas que já oferecem visibilidade completa das operações.
+O painel abre em **http://127.0.0.1:5000** com clientes de demonstração. Para ver um motoboy andando sem celular, monte uma rota no painel e execute:
+
+```bash
+python scripts/simular_motoboy.py --tid 0      # use .venv\Scripts\python no Windows
+```
+
+Instalação manual, túnel para os celulares (ngrok) e configuração do app OwnTracks estão em **[docs/instalacao.md](docs/instalacao.md)**.
+
+## Funcionalidades
+
+| # | Submódulo | O que faz | Status |
+|---|-----------|-----------|--------|
+| 1 | **Rastreamento GPS em tempo real** | Mostra todos os motoboys no mapa, com nome e velocidade, atualizando a cada 2 s a partir do app OwnTracks. Leituras imprecisas ou com saltos impossíveis são descartadas. | ✅ |
+| 2 | **Gestão e otimização de rotas** | Monta a rota por cliente cadastrado, busca de endereço ou clique no mapa. Calcula trajeto e tempo pelo OSRM, otimiza pela heurística do vizinho mais próximo e tem modo offline. | ✅ |
+| 3 | **Cadastro de clientes** | Cadastro georreferenciado com telefone e cor. Importação do ERP prevista para a semana 9. | ✅ / 🔜 |
+| 4 | **Histórico de viagens** | Cada entrega exige o nº da nota e é registrada com motoboy, horários e destinos. Filtro por período e exportação Excel. | ✅ |
+| 5 | **Replay de trilha** | Reproduz o percurso do motoboy em um dia, para auditoria e avaliação. | ✅ |
+
+## Contexto e problema
+
+A **Galvitech Ltda** é uma empresa de Jaraguá do Sul/SC especializada em ERP para o setor de autopeças. Boa parte de seus clientes depende de **entregas por motoboys**, mas o ERP **não tem nenhum módulo para essa atividade**. Não há rastreamento, cálculo de rotas nem registro estruturado das viagens. As consequências são:
+
+- impossibilidade de informar **prazos confiáveis** ao cliente final;
+- dificuldade de **alocar o motoboy mais próximo**;
+- **ausência de histórico** para avaliação de desempenho;
+- **perda de rastreabilidade** entre entregas e notas fiscais.
 
 > **Pergunta de pesquisa:** *em que medida um módulo de rastreamento em tempo real integrado ao ERP da Galvitech Ltda é capaz de suprir essa lacuna operacional e aumentar a eficiência na gestão de entregas por motoboys pelas empresas clientes?*
 
-## Proposta de solução
+## Proposta e diferencial
 
-Desenvolver um **módulo de rastreamento em tempo real de motoboys embarcado no próprio ERP**, construído sobre tecnologias abertas:
+O módulo fica **embarcado no próprio ERP**, usa **apenas tecnologias abertas** e:
 
-- **OwnTracks** para geolocalização (posição GPS via MQTT/HTTP);
-- **OSRM (Open Source Routing Machine)** para cálculo e otimização de rotas sobre o OpenStreetMap;
-- **Leaflet.js** para a visualização do mapa interativo;
-- **backend em Flask + banco SQLite** para API, persistência e regras de negócio.
+- herda o **cadastro de clientes** e o **vínculo com a nota fiscal**;
+- registra **histórico estruturado** e oferece **replay de trilha**;
+- funciona mesmo com o serviço de rotas fora do ar (**modo offline**);
+- é validado em ambiente real com o questionário **SUS**.
 
-A solução **herda o cadastro de clientes e o vínculo com a nota fiscal já existentes no ERP**, registra histórico estruturado com *replay* de trilha e permite a exportação dos dados em Excel.
-
-## Inovação e diferencial
-
-O diferencial está em entregar um módulo **embarcado no próprio ERP**, baseado em tecnologias abertas e sem custos de licenciamento, que:
-
-- herda automaticamente o **cadastro de clientes** e o **vínculo com a nota fiscal**;
-- registra **histórico estruturado** de cada entrega;
-- oferece **replay de trilha** para auditoria e avaliação;
-- é validado por meio do questionário **SUS (System Usability Scale)** em ambiente real.
-
-Essa combinação **não foi encontrada em nenhuma das soluções comparadas**. As plataformas comerciais resolvem partes do problema, mas obrigariam o cliente a operar em **dois sistemas distintos** — o ERP (onde residem a nota e o cliente) e a plataforma de entregas (onde fica a rota) —, fragmentando dados que precisam estar conectados. A **integração nativa elimina essa fragmentação**.
-
-## Necessidade de mercado
-
-As plataformas SaaS de terceiros disponíveis (como Vuupt, Loggi e Foody Delivery) confirmam a demanda do mercado, mas compartilham a mesma lacuna estrutural sob a ótica da Galvitech: são **serviços externos, cobrados mensalmente, hospedados em nuvem de terceiros, voltados a verticais específicos e não integrados nativamente ao ERP nem ao fluxo de nota fiscal do setor de autopeças**. Não existe, hoje, uma solução equivalente embarcada no ERP utilizado por esses clientes.
+Plataformas SaaS como Vuupt, Loggi e Foody Delivery confirmam a demanda, mas são serviços externos com mensalidade, voltados a outros setores e **não integrados ao ERP nem ao fluxo de nota fiscal de autopeças**. Com elas, o cliente teria que operar em dois sistemas diferentes. A integração nativa elimina essa fragmentação.
 
 ## Arquitetura
 
-A arquitetura organiza-se em quatro componentes. O *app* OwnTracks no smartphone do motoboy publica a posição GPS a cada dois segundos (MQTT/HTTP); o backend em Flask recebe essas mensagens, expõe uma API REST, persiste os dados em SQLite e consulta o OSRM para o cálculo de rotas; o Leaflet.js renderiza o mapa interativo embutido no ERP; e o módulo lê diretamente o cadastro de clientes e a nota fiscal do próprio ERP.
-
 ```mermaid
-flowchart TD
-    APP["Smartphone do motoboy<br/>App OwnTracks"]
-    OSRM["OSRM<br/>+ OpenStreetMap"]
-    BACK["Backend · Flask (API REST)<br/>+ banco SQLite"]
-
-    subgraph ERP["ERP da Galvitech Ltda"]
-        FRONT["Frontend Web<br/>Leaflet.js (mapa)"]
-        DATA["Cadastro de clientes<br/>Nota Fiscal (NF-e)"]
+flowchart LR
+    APP["📱 Celular do motoboy<br/>App OwnTracks"]
+    subgraph SRV["Servidor (Python · Flask + waitress)"]
+        API["API REST<br/>radar_tracker/api.py"]
+        FROTA["Frota em tempo real<br/>frota.py + sessao.json"]
+        DB[("SQLite<br/>clientes · histórico · trilha")]
     end
+    OSRM["OSRM + OpenStreetMap<br/>(rotas)"]
+    WEB["🖥️ Painel web (Leaflet.js)<br/>embutido no ERP"]
+    ERP["ERP Galvitech<br/>clientes · NF-e"]
 
-    APP -->|"posição GPS a cada 2s<br/>MQTT / HTTP"| BACK
-    BACK <-->|"consulta e cálculo de rotas"| OSRM
-    BACK -->|"API REST"| FRONT
-    BACK -->|"lê cliente e NF"| DATA
+    APP -- "posição GPS (HTTP, ~2 s)" --> API
+    WEB <-->|"REST (poll 2 s)"| API
+    API --> FROTA
+    API --> DB
+    API <-->|"trajeto e tempo"| OSRM
+    ERP -.->|"integração (semanas 9–12)"| DB
 ```
 
-## Funcionalidades (submódulos)
-
-| # | Submódulo | Descrição |
-|---|-----------|-----------|
-| 1 | **Rastreamento GPS em tempo real** | Exibe a posição de múltiplos motoboys no mapa, com atualização a cada 2 segundos, a partir das mensagens do app OwnTracks. |
-| 2 | **Gestão e otimização de rotas** | Calcula trajetos via OSRM sobre o OpenStreetMap, ordena as paradas pela heurística do vizinho mais próximo e oferece um modo *offline* de contingência. |
-| 3 | **Cadastro de clientes** | Herdado diretamente do ERP, evitando redigitação. |
-| 4 | **Histórico de viagens** | Registra cada entrega de forma estruturada e vinculada à respectiva nota fiscal, com exportação em Excel. |
-| 5 | **Replay de trilha** | Reproduz o percurso realizado para auditoria e avaliação de desempenho. |
+Detalhes, diagramas de estado e sequência e as decisões de projeto estão em [docs/arquitetura.md](docs/arquitetura.md).
 
 ## Tecnologias
 
 | Camada | Tecnologia | Função |
 |--------|-----------|--------|
-| Geolocalização | **OwnTracks** (MQTT/HTTP) | Publica a posição GPS do motoboy a cada 2 s |
-| Backend | **Python + Flask** | API REST, regras de negócio e orquestração |
-| Persistência | **SQLite** | Armazena viagens, posições e histórico |
-| Roteirização | **OSRM + OpenStreetMap** | Cálculo e otimização de rotas |
-| Visualização | **Leaflet.js** | Mapa interativo embarcado no ERP |
-| Exportação | **Excel** | Saída de histórico e relatórios |
+| Geolocalização | **OwnTracks** (HTTP) | Envia a posição GPS do motoboy |
+| Backend | **Python 3.10+ · Flask · waitress** | API REST, regras de negócio e servidor de produção |
+| Persistência | **SQLite** | Clientes, histórico de viagens e trilhas GPS |
+| Roteirização | **OSRM + OpenStreetMap** | Trajeto e tempo estimado (com fallback offline) |
+| Geocodificação | **Nominatim** | Busca de endereços |
+| Visualização | **Leaflet.js** | Mapa interativo |
+| Relatórios | **openpyxl** | Exportação do histórico em Excel |
+| Qualidade | **pytest · GitHub Actions** | 29 testes em Windows e Ubuntu |
 
-## Metodologia
+## Estrutura do repositório
 
-O projeto adota a **Design Science Research (DSR)**, adequada à construção e avaliação de artefatos de software para problemas reais, organizada em quatro etapas:
+```
+rastreamento-motoboys-galvitech/
+├── radar_tracker/            # aplicação (pacote Python)
+│   ├── __init__.py           # create_app()
+│   ├── api.py                # endpoints REST + OwnTracks + Excel
+│   ├── config.py             # configuração via .env
+│   ├── db.py                 # SQLite: esquema, migrações, consultas
+│   ├── frota.py              # estado dos motoboys + filtro de GPS
+│   ├── geo.py                # haversine, velocidade, vizinho mais próximo
+│   ├── roteamento.py         # OSRM + fallback offline + Nominatim
+│   ├── templates/index.html  # painel
+│   └── static/               # CSS e JavaScript do painel
+├── config/motoboys.example.json
+├── scripts/
+│   ├── seed_demo.py          # clientes fictícios
+│   ├── simular_motoboy.py    # simulador do OwnTracks
+│   ├── windows/tunel_ngrok.bat
+│   └── docs/                 # gerador do cronograma (.docx/.md)
+├── tests/                    # suíte pytest
+├── docs/                     # documentação e cronograma
+├── instalar.bat · iniciar.bat · instalar.sh · iniciar.sh
+├── run.py                    # ponto de entrada
+├── requirements.txt · requirements-dev.txt · .env.example
+└── .github/workflows/testes.yml
+```
 
-1. **Levantamento de requisitos** funcionais e não funcionais (entrevistas com colaboradores e clientes);
-2. **Projeto da arquitetura** e modelagem de dados;
-3. **Implementação incremental** dos submódulos;
-4. **Avaliação em ambiente real**, combinando a cronometragem do tempo de planejamento de rotas (antes e depois) e o questionário **SUS**.
+## Configuração
 
-## Resultados esperados
+Todas as opções ficam no arquivo `.env`, criado pelo instalador a partir de [`.env.example`](.env.example): nome e coordenadas da loja, cidade de busca, servidor OSRM, fator de atraso, token do OwnTracks e limites do filtro de GPS. Os motoboys ficam em `config/motoboys.json` (nome, cor e Tracker ID do OwnTracks).
 
-- Redução do **tempo médio de planejamento de rotas**;
-- Disponibilização de **dados operacionais estruturados** (posição em tempo real, sequência otimizada de paradas e histórico de viagens);
-- **Rastreabilidade ponta a ponta** das entregas, vinculada à nota fiscal;
-- Escore de usabilidade na faixa **"boa" ou superior** no questionário SUS;
-- Aumento do **valor competitivo do ERP** frente às plataformas SaaS de terceiros.
+Banco, sessão, `.env` e `config/motoboys.json` **não são versionados**, para que dados reais de clientes nunca vão para o repositório público.
 
-## Cronograma
+## Testes
 
-Desenvolvimento previsto para **18 semanas** ao longo do PAC 8 (2026/2):
+```bash
+pip install -r requirements-dev.txt
+pytest
+```
 
-| Semanas | Atividade |
-|---------|-----------|
-| 1–2 | Levantamento e validação de requisitos |
-| 2–4 | Projeto da arquitetura e modelagem de dados |
-| 4–6 | Submódulo de rastreamento GPS (OwnTracks) |
-| 6–9 | Submódulo de roteirização (OSRM + vizinho mais próximo + offline) |
-| 9–11 | Cadastro de clientes e histórico vinculado à NF |
-| 11–13 | Replay de trilha e exportação em Excel |
-| 13–15 | Integração com o ERP e testes de integração |
-| 14–16 | Avaliação em ambiente real (cronometragem + SUS) |
-| 16–17 | Análise dos resultados e escrita do TCC |
-| 17–18 | Revisão final e preparação da defesa |
+A suíte cobre as funções geográficas, o ciclo de entrega, o filtro de GPS, todos os endpoints, o OwnTracks (com e sem token) e a exportação Excel. A rede fica bloqueada durante os testes, o que também valida o modo offline. O CI roda a cada push em Windows e Ubuntu (Python 3.10, 3.12 e 3.13).
 
-> O levantamento inicial de requisitos tem início ainda ao final do PAC ESOFT VII (2026/1).
+## Metodologia e resultados esperados
 
-## Status do projeto
+O projeto adota a **Design Science Research (DSR)** em quatro etapas: (1) levantamento de requisitos ([docs/requisitos.md](docs/requisitos.md)); (2) projeto da arquitetura e modelagem de dados; (3) implementação incremental com entregas semanais; (4) avaliação em ambiente real com cronometragem do planejamento de rotas (antes/depois) e questionário **SUS**.
 
-**Fase atual:** proposta e planejamento (PAC ESOFT VII — 2026/1).
-**Próxima fase:** desenvolvimento e validação (PAC 8 — 2026/2).
+Resultados esperados:
 
-## Pitch e documentação
+- redução do **tempo médio de planejamento de rotas**;
+- **dados operacionais estruturados** (posição em tempo real, sequência otimizada de paradas, histórico de viagens);
+- **rastreabilidade ponta a ponta** das entregas vinculada à nota fiscal;
+- escore **SUS "bom" ou superior** (≥ 71);
+- aumento do **valor competitivo do ERP** frente a plataformas SaaS.
 
-- **Vídeo (pitch):** [assista no YouTube](https://www.youtube.com/watch?v=KaN6kuo9GSM)
-- **Artigo completo (PDF):** [Portfólio PAC ESOFT VII](./docs/Portfolio-PAC-VII-Specht.pdf)
+## Cronograma de entregas
+
+Entregas **toda sexta-feira** do PAC 8 (07/08 a 04/12/2026). Documento completo e editável: **[docs/Cronograma_Entregas_TCC.docx](docs/Cronograma_Entregas_TCC.docx)** · versão web: [docs/cronograma.md](docs/cronograma.md). As semanas futuras estão nos [milestones do GitHub](https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech/milestones).
+
+| Sem. | Sexta | Entrega | Status |
+|:---:|:---:|---|:---:|
+| 1–2 | 07/08 – 14/08 | Levantamento e validação de requisitos | ✅ |
+| 3–4 | 21/08 – 28/08 | Arquitetura, modelo de dados e contrato da API | ✅ |
+| 5–6 | 04/09 – 11/09 | Rastreamento GPS (OwnTracks), filtro de GPS e simulador | ✅ |
+| 7 | 18/09 | Roteirização OSRM + vizinho mais próximo + offline | ✅ |
+| 8 | 25/09 | Refatoração, testes, CI e documentação · **v0.8.0** | ✅ |
+| 9 | 02/10 | Importação do cadastro de clientes do ERP | 🔜 |
+| 10 | 09/10 | Vínculo da viagem com a NF-e do ERP | 🔜 |
+| 11 | 16/10 | Indicadores de desempenho e replay aprimorado | 🔜 |
+| 12 | 23/10 | Painel embarcado no ERP + login de operador | 🔜 |
+| 13 | 30/10 | Testes de integração e homologação · **v0.9.0** | 🔜 |
+| 14–16 | 06/11 – 20/11 | Avaliação real: cronometragem e SUS | 🔜 |
+| 17 | 27/11 | Análise dos resultados e escrita do TCC | 🔜 |
+| 18 | 04/12 | Revisão final e defesa · **v1.0.0** | 🔜 |
+
+## Documentação
+
+| Documento | Conteúdo |
+|-----------|----------|
+| [docs/instalacao.md](docs/instalacao.md) | Instalação, ngrok, OwnTracks, simulador, solução de problemas |
+| [docs/requisitos.md](docs/requisitos.md) | Atores, requisitos funcionais e não funcionais, regras de negócio |
+| [docs/arquitetura.md](docs/arquitetura.md) | Componentes, camadas, fluxos, algoritmo de rotas, decisões |
+| [docs/api.md](docs/api.md) | Referência de todos os endpoints |
+| [docs/banco-de-dados.md](docs/banco-de-dados.md) | Modelo ER, sessão da frota, backup |
+| [docs/desenvolvimento.md](docs/desenvolvimento.md) | Histórico do desenvolvimento, do protótipo à versão atual |
+| [docs/cronograma.md](docs/cronograma.md) | Cronograma detalhado de entregas |
+| [CHANGELOG.md](CHANGELOG.md) | Mudanças por versão |
+| [Portfólio PAC ESOFT VII (PDF)](docs/Portfolio-PAC-VII-Specht.pdf) | Artigo da proposta |
+| [Pitch (YouTube)](https://www.youtube.com/watch?v=KaN6kuo9GSM) | Vídeo de apresentação |
 
 ## Autor
 
 **André Gustavo Specht**
-Engenharia de Software — Centro Universitário Católica de Santa Catarina (Jaraguá do Sul/SC)
+Engenharia de Software, Centro Universitário Católica de Santa Catarina (Jaraguá do Sul/SC)
 Proprietário da Galvitech Ltda
 
 ---
 
-<sub>Projeto acadêmico desenvolvido para o PAC ESOFT VII. Orientação: Prof. Andrei Carniel.</sub>
+<sub>Projeto acadêmico desenvolvido no PAC ESOFT VII e PAC 8. Orientação: Prof. Andrei Carniel.</sub>
