@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>{{ empresa }} · Rastreamento de Motoboys</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" />
+</head>
+<body>
+<div id="map"></div>
+
+<div id="painel">
+  <div id="mobile-toggle"><i class="fas fa-chevron-down"></i></div>
+  <div class="tabs" id="tabs-container"></div>
+  <div id="status-box" class="livre">DISPONÍVEL</div>
+
+  <div class="conteudo-principal">
+    <div id="controles-edicao">
+      <div class="linha">
+        <input type="text" id="inp-busca" placeholder="Buscar cliente ou endereço..." />
+        <button id="btn-buscar" title="Buscar"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="linha">
+        <input list="lista-clientes-sugestao" id="inp-cliente-salvo" placeholder="Cliente salvo..." />
+        <datalist id="lista-clientes-sugestao"></datalist>
+        <button id="btn-add-cliente" class="btn-verde" title="Adicionar à rota"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+    <button id="btn-otimizar" class="btn-opt hidden">⚡ Otimizar rota (vizinho mais próximo)</button>
+    <ul id="lista"></ul>
+    <div id="msg-vazio">Nenhuma parada na rota</div>
+  </div>
+
+  <div class="footer-btns">
+    <div class="tempo">
+      <b>Tempo estimado: <span id="tempo">0 min</span></b>
+      <small id="tempo-fonte"></small>
+    </div>
+    <input type="text" id="inp-nota" placeholder="Nº NOTA / PEDIDO" />
+    <button id="btn-iniciar" class="btn-full btn-go">🚀 SAIR PARA ENTREGA</button>
+    <button id="btn-voltar" class="btn-full btn-end hidden">🏁 FINALIZAR ROTA</button>
+
+    <div class="action-grid">
+      <button class="modern-btn btn-report" id="btn-relatorio"><i class="fas fa-file-alt"></i> Relatório</button>
+      <button class="modern-btn btn-replay" id="btn-replay"><i class="fas fa-history"></i> Replay</button>
+      <button class="modern-btn btn-manage" id="btn-clientes"><i class="fas fa-users"></i> Gerenciar clientes</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-gestao-clientes">
+  <div class="modal-box">
+    <div class="modal-header">Gerenciar clientes <span class="fechar" data-fechar="modal-gestao-clientes">✕</span></div>
+    <div class="modal-body">
+      <input type="text" id="filtro-cli-lista" placeholder="Filtrar por nome..." />
+      <div class="tabela-rolagem">
+        <table class="cli-table" id="tabela-clientes">
+          <thead><tr><th>Nome</th><th>Telefone</th><th>Ações</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-relatorio">
+  <div class="modal-box">
+    <div class="modal-header">Histórico de viagens <span class="fechar" data-fechar="modal-relatorio">✕</span></div>
+    <div class="modal-body">
+      <div class="filtros">
+        <input type="date" id="filtro-inicio" title="Data inicial" />
+        <input type="date" id="filtro-fim" title="Data final" />
+        <button id="btn-filtrar">Filtrar</button>
+        <button id="btn-excel" class="btn-verde"><i class="fas fa-file-excel"></i> Excel</button>
+      </div>
+      <div class="tabela-rolagem">
+        <table class="cli-table">
+          <thead><tr><th>Data</th><th>Motoboy</th><th>Nota</th><th>Destinos</th><th>Saída</th><th>Chegada</th></tr></thead>
+          <tbody id="tbody-historico"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-replay">
+  <div class="modal-box modal-pequeno">
+    <div class="modal-header roxo">🎥 Replay de trilha <span class="fechar" data-fechar="modal-replay">✕</span></div>
+    <div class="modal-body">
+      <div class="replay-box">
+        <p>Reproduza o percurso do motoboy selecionado.</p>
+        <input type="date" id="replay-data" title="Dia (vazio = últimas 24h)" />
+        <input type="range" id="replay-slider" min="0" max="100" value="0" />
+        <h2 id="replay-time">--:--</h2>
+        <button id="btn-carregar-trilha" class="btn-roxo">Carregar trilha</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+  window.RADAR = { empresa: {{ empresa|tojson }}, base: [{{ base_lat }}, {{ base_lon }}] };
+</script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

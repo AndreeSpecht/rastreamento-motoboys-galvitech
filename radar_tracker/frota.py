@@ -1,0 +1,152 @@
+"""Estado em memória da frota de motoboys, persistido em JSON entre reinícios."""
+
+import json
+import os
+import threading
+import time
+from datetime import datetime
+
+from . import geo
+
+LIVRE = "LIVRE"
+EM_ROTA = "EM_ROTA"
+
+
+class MotoboyNaoEncontrado(KeyError):
+    pass
+
+
+class Frota:
+    def __init__(self, motoboys, base_lat, base_lon, arquivo_sessao):
+        self.motoboys = {m["id"]: m for m in motoboys}
+        self.por_tid = {str(m["tid"]): m["id"] for m in motoboys}
+        self.base = {"lat": base_lat, "lon": base_lon}
+        self.arquivo_sessao = str(arquivo_sessao)
+        self._lock = threading.RLock()
+        self.estado = {mid: self._estado_inicial() for mid in self.motoboys}
+
+    def _estado_inicial(self):
+        return {
+            "status": LIVRE,
+            "rota": [],
+            "nota": "",
+            "hora_saida": "",
+            "lat_atual": self.base["lat"],
+            "lon_atual": self.base["lon"],
+            "velocidade": 0,
+            "last_ts": 0,
+        }
+
+    # --- Persistência ---
+    def carregar(self):
+        if not os.path.exists(self.arquivo_sessao):
+            return
+        try:
+            with open(self.arquivo_sessao, encoding="utf-8") as f:
+                salvo = json.load(f)
+        except (OSError, ValueError):
+            return
+        with self._lock:
+            for chave, dados in salvo.items():
+                mid = int(chave)
+                if mid in self.estado and isinstance(dados, dict):
+                    for campo in self.estado[mid]:
+                        if campo in dados:
+                            self.estado[mid][campo] = dados[campo]
+
+    def salvar(self):
+        with self._lock:
+            conteudo = json.dumps(self.estado, ensure_ascii=False, indent=2)
+        os.makedirs(os.path.dirname(self.arquivo_sessao) or ".", exist_ok=True)
+        temporario = self.arquivo_sessao + ".tmp"
+        with open(temporario, "w", encoding="utf-8") as f:
+            f.write(conteudo)
+        os.replace(temporario, self.arquivo_sessao)  # gravação atômica
+
+    # --- Consultas ---
+    def _moto(self, mid):
+        try:
+            return self.estado[int(mid)]
+        except (KeyError, TypeError, ValueError):
+            raise MotoboyNaoEncontrado(mid) from None
+
+    def id_por_tid(self, tid):
+        return self.por_tid.get(str(tid))
+
+    def snapshot(self):
+        with self._lock:
+            return {
+                str(mid): {**dados, "nome": self.motoboys[mid]["nome"], "cor": self.motoboys[mid]["cor"],
+                           "rota": list(dados["rota"])}
+                for mid, dados in self.estado.items()
+            }
+
+    # --- Montagem da rota ---
+    def adicionar_parada(self, mid, nome, lat, lon):
+        with self._lock:
+            moto = self._moto(mid)
+            if moto["status"] != LIVRE:
+                return False
+            moto["rota"].append({"nome": nome, "lat": float(lat), "lon": float(lon)})
+        self.salvar()
+        return True
+
+    def remover_parada(self, mid, indice):
+        with self._lock:
+            moto = self._moto(mid)
+            if moto["status"] != LIVRE or not 0 <= indice < len(moto["rota"]):
+                return False
+            moto["rota"].pop(indice)
+        self.salvar()
+        return True
+
+    def otimizar(self, mid):
+        with self._lock:
+            moto = self._moto(mid)
+            if moto["status"] != LIVRE or len(moto["rota"]) < 2:
+                return False
+            origem = {"lat": moto["lat_atual"] or self.base["lat"], "lon": moto["lon_atual"] or self.base["lon"]}
+            moto["rota"] = geo.vizinho_mais_proximo(origem, moto["rota"])
+        self.salvar()
+        return True
+
+    # --- Ciclo da entrega ---
+    def iniciar(self, mid, nota):
+        with self._lock:
+            moto = self._moto(mid)
+            if moto["status"] != LIVRE or not moto["rota"] or not nota:
+                return False
+            moto.update(status=EM_ROTA, nota=nota, hora_saida=datetime.now().strftime("%H:%M"))
+        self.salvar()
+        return True
+
+    def finalizar(self, mid):
+        """Encerra a rota e devolve os dados da viagem para o histórico (ou None)."""
+        with self._lock:
+            moto = self._moto(mid)
+            if moto["status"] != EM_ROTA:
+                return None
+            viagem = {
+                "moto_id": int(mid),
+                "motoboy": self.motoboys[int(mid)]["nome"],
+                "hora_saida": moto["hora_saida"],
+                "hora_chegada": datetime.now().strftime("%H:%M"),
+                "destinos": ", ".join(p["nome"] for p in moto["rota"]),
+                "nota": moto["nota"],
+            }
+            moto.update(status=LIVRE, rota=[], nota="", hora_saida="")
+        self.salvar()
+        return viagem
+
+    # --- GPS ---
+    def atualizar_posicao(self, mid, lat, lon, ts=None):
+        """Aplica uma leitura de GPS e devolve a velocidade calculada (km/h)."""
+        ts = int(ts or time.time())
+        with self._lock:
+            moto = self._moto(mid)
+            vel = geo.velocidade_kmh(moto["lat_atual"], moto["lon_atual"], moto["last_ts"], lat, lon, ts)
+            if vel is None or vel > 120 or vel < 1:
+                vel = 0
+            moto.update(lat_atual=lat, lon_atual=lon, velocidade=round(vel, 1), last_ts=ts)
+        self.salvar()
+        return vel

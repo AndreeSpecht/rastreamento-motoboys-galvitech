@@ -1,0 +1,6 @@
+[
+  { "id": 0, "nome": "Motoboy Um",     "cor": "#e74c3c", "tid": "0" },
+  { "id": 1, "nome": "Motoboy Dois",   "cor": "#3498db", "tid": "1" },
+  { "id": 2, "nome": "Motoboy Três",   "cor": "#2ecc71", "tid": "2" },
+  { "id": 3, "nome": "Motoboy Quatro", "cor": "#9b59b6", "tid": "3" }
+]
