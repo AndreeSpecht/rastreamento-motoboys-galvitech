@@ -33,3 +33,7 @@ _legado_local/
 Thumbs.db
 desktop.ini
 ~$*
+
+# Node (gerador do cronograma)
+node_modules/
+package-lock.json
