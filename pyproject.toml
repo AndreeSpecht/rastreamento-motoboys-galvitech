@@ -1,0 +1,10 @@
+[project]
+name = "rastreamento-motoboys-galvitech"
+version = "1.0.0"
+description = "Módulo de rastreamento em tempo real de motoboys integrado ao ERP da Galvitech Ltda"
+requires-python = ">=3.10"
+authors = [{ name = "André Gustavo Specht" }]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
