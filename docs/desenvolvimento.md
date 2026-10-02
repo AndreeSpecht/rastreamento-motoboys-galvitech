@@ -72,9 +72,27 @@ O simulador expôs um caso real durante os testes: duas leituras no mesmo segund
 - **GitHub Actions** roda a suíte em Windows e Ubuntu, Python 3.10, 3.12 e 3.13.
 - Commits no padrão *Conventional Commits* (`feat`, `fix`, `refactor`, `test`, `docs`, `build`, `chore`).
 
+## Fase 3: entregas semanais (out/2026)
+
+### Semana 9 (02/10): alertas de status
+
+O ponto fraco de rastrear pelo celular do motoboy é que o aparelho pode desligar, ficar sem internet ou ter o GPS desativado, e o operador só percebe quando liga para o motoboy. A semana 9 transformou isso em **alertas automáticos no painel**:
+
+- **Sem sinal** (crítico): durante a entrega, nenhuma mensagem do celular há 3 min. Considera também quem nunca enviou posição desde a saída.
+- **Parado fora de cliente** (alerta): mais de 10 min dentro de um raio de 50 m, longe de clientes, paradas da rota e da loja.
+- **Bateria baixa** (aviso): bateria do celular abaixo de 20%, usando o campo `batt` que o OwnTracks já envia. É ignorado quando o celular está carregando.
+
+Decisões:
+
+- As regras ficam em `alertas.py` como **funções puras** (recebem o estado e a hora atual), o que permitiu testar cada cenário sem esperar minutos reais.
+- O tempo "parado" usa um **ponto de referência com raio** em vez da velocidade instantânea, que oscila com o ruído do GPS mesmo com a moto parada.
+- O **último contato** é registrado mesmo quando a posição é descartada pelo filtro de GPS: uma leitura imprecisa ainda prova que o celular está conectado.
+- O teste ponta a ponta com o simulador revelou um alerta duplicado: sem sinal, a última posição fica "congelada" e o motoboy também aparecia como parado. O alerta de parada passou a ser suprimido nesse caso.
+- Os limites ficam no `.env`, para ajustar à realidade da loja depois do piloto.
+
 ## Próximas fases
 
-Veja o [cronograma](cronograma.md): alertas de status, confirmação de entrega por parada, indicadores, login de operador, homologação, avaliação em ambiente real (cronometragem + SUS) e redação final do TCC.
+Veja o [cronograma](cronograma.md): confirmação de entrega por parada, indicadores, login de operador, homologação, avaliação em ambiente real (cronometragem + SUS) e redação final do TCC.
 
 ## Como contribuir / padrão de trabalho
 

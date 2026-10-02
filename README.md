@@ -73,6 +73,7 @@ Instalação manual, túnel para os celulares (ngrok) e configuração do app Ow
 | 3 | **Cadastro de clientes** | Cadastro georreferenciado com telefone e cor, feito no próprio sistema (clique no mapa ou busca de endereço). | ✅ |
 | 4 | **Histórico de viagens** | Cada entrega exige o nº da nota e é registrada com motoboy, horários e destinos. Filtro por período e exportação Excel. | ✅ |
 | 5 | **Replay de trilha** | Reproduz o percurso do motoboy em um dia, para auditoria e avaliação. | ✅ |
+| 6 | **Alertas de status** | Avisa no painel quando o motoboy fica sem sinal, parado muito tempo fora de um cliente ou com bateria baixa no celular. | ✅ |
 
 ## Contexto e problema
 
@@ -132,7 +133,7 @@ Detalhes, diagramas de estado e sequência e as decisões de projeto estão em [
 | Geocodificação | **Nominatim** | Busca de endereços |
 | Visualização | **Leaflet.js** | Mapa interativo |
 | Relatórios | **openpyxl** | Exportação do histórico em Excel |
-| Qualidade | **pytest · GitHub Actions** | 29 testes em Windows e Ubuntu |
+| Qualidade | **pytest · GitHub Actions** | 43 testes em Windows e Ubuntu |
 
 ## Estrutura do repositório
 
@@ -200,7 +201,7 @@ Entregas **toda sexta-feira** do semestre final (07/08 a 04/12/2026). Documento 
 | 5–6 | 04/09 – 11/09 | Rastreamento GPS (OwnTracks), filtro de GPS e simulador | ✅ |
 | 7 | 18/09 | Roteirização OSRM + vizinho mais próximo + offline | ✅ |
 | 8 | 25/09 | Refatoração, testes, CI e documentação · **v0.8.0** | ✅ |
-| 9 | 02/10 | Alertas: sinal perdido, parada prolongada e bateria baixa | 🔜 |
+| 9 | 02/10 | Alertas: sinal perdido, parada prolongada e bateria baixa | ✅ |
 | 10 | 09/10 | Confirmação de entrega por parada (horário em cada cliente) | 🔜 |
 | 11 | 16/10 | Indicadores de desempenho e replay aprimorado | 🔜 |
 | 12 | 23/10 | Login de operador e perfis de acesso | 🔜 |

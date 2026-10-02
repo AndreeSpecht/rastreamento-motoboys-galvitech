@@ -44,6 +44,7 @@ O motoboy não precisa de um app próprio: o **OwnTracks** (gratuito, Android/iO
 | `radar_tracker/config.py` | Configuração por variáveis de ambiente / `.env` e leitura de `config/motoboys.json`. | — |
 | `radar_tracker/api.py` | Endpoints HTTP, validação de entrada, exportação Excel. | frota, db, roteamento |
 | `radar_tracker/frota.py` | Máquina de estados de cada motoboy (`LIVRE` ⇄ `EM_ROTA`), paradas, filtro de GPS, persistência da sessão. | geo |
+| `radar_tracker/alertas.py` | Regras dos alertas (sem sinal, parado, bateria baixa) em funções puras, aplicadas ao estado da frota. | geo |
 | `radar_tracker/geo.py` | Funções puras: distância, velocidade, ordenação de paradas. | — |
 | `radar_tracker/roteamento.py` | Chamada ao OSRM e ao Nominatim com *timeout* e *fallback*. | geo, requests |
 | `radar_tracker/db.py` | Esquema SQLite, migrações leves e consultas parametrizadas. | sqlite3 |

@@ -28,7 +28,7 @@ Requisitos levantados pela Galvitech Ltda com a equipe da Radar Auto Peças, a p
 | RF12 | Registrar cada viagem (motoboy, data, saída, chegada, destinos, nota). | Histórico | ✅ |
 | RF13 | Filtrar o histórico por período e exportar em Excel. | Histórico | ✅ |
 | RF14 | Reproduzir (replay) a trilha percorrida por um motoboy em um dia. | Replay | ✅ |
-| RF15 | Alertar quando um motoboy perder o sinal, ficar parado por muito tempo ou estiver com bateria baixa. | Rastreamento | 🔜 semana 9 |
+| RF15 | Alertar quando um motoboy perder o sinal, ficar parado por muito tempo fora de um cliente ou estiver com bateria baixa no celular. | Rastreamento | ✅ semana 9 |
 | RF16 | Confirmar a entrega em cada parada, registrando o horário de chegada ao cliente. | Histórico | 🔜 semana 10 |
 | RF17 | Painel de indicadores (entregas por motoboy, tempo médio de rota, km rodados). | Relatórios | 🔜 semana 11 |
 | RF18 | Acesso ao painel com login de operador e perfis (operador / gestor). | Segurança | 🔜 semana 12 |
@@ -48,7 +48,8 @@ Requisitos levantados pela Galvitech Ltda com a equipe da Radar Auto Peças, a p
 | RNF07 | **Responsividade**: uso no celular do operador. | Painel recolhível em telas ≤ 768 px. |
 | RNF08 | **Segurança**: endpoint de GPS não pode aceitar posições de qualquer origem. | Token opcional (`OWNTRACKS_TOKEN`) via HTTP Basic/X-Token; saída de HTML escapada no frontend. |
 | RNF09 | **Privacidade**: dados de clientes não vão para o repositório público. | Banco e configuração local no `.gitignore`; exemplos com dados fictícios. |
-| RNF10 | **Manutenibilidade**: código modular e testado. | Pacote em camadas, 29 testes automatizados, integração contínua. |
+| RNF10 | **Manutenibilidade**: código modular e testado. | Pacote em camadas, 43 testes automatizados, integração contínua. |
+| RNF11 | **Alertas sem falso positivo óbvio**: não alertar parada no cliente, na loja ou quando o celular está carregando. | Raio de cliente/loja, campo `bs` do OwnTracks e supressão de "parado" quando já está sem sinal. |
 
 ## Regras de negócio
 

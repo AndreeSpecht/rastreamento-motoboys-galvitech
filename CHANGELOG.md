@@ -4,7 +4,15 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/). 
 
 ## [Não lançado]
 
-Planejado (ver [cronograma](docs/cronograma.md)): alertas de status, confirmação de entrega por parada, indicadores, login de operador, homologação e avaliação em ambiente real.
+Planejado (ver [cronograma](docs/cronograma.md)): confirmação de entrega por parada, indicadores, login de operador, homologação e avaliação em ambiente real.
+
+### Adicionado (semana 9, 02/10/2026)
+- Alertas de status no painel: **sem sinal** durante a entrega, **parado** fora de cliente e **bateria baixa** do celular.
+- Endpoint `/api/alertas` e campos `alertas`, `bateria`, `carregando` e `recebido_em` em `/api/estado`.
+- Bateria e indicador de alerta no ícone do motoboy e nas abas do painel.
+- Simulador com cenários `--bateria`, `--parar-por` e `--cair-sinal`.
+- Variáveis `ALERTA_*` no `.env` para ajustar os limites.
+- 14 testes novos (43 no total).
 
 ## [0.8.0] - 2026-09-25 (entrega da semana 8)
 

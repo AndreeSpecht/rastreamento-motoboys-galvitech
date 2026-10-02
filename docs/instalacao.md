@@ -91,6 +91,16 @@ Monte uma rota para um motoboy no painel e execute:
 python scripts/simular_motoboy.py --tid 0 --velocidade 40
 ```
 
+Para demonstrar os alertas do painel:
+
+```bash
+python scripts/simular_motoboy.py --tid 0 --bateria 15      # bateria baixa (aparece na hora)
+python scripts/simular_motoboy.py --tid 0 --parar-por 12    # para 12 min no meio da rota → "parado"
+python scripts/simular_motoboy.py --tid 0 --cair-sinal      # para de enviar no meio da rota → "sem sinal" após 3 min
+```
+
+Os tempos dos alertas podem ser reduzidos no `.env` para apresentações (ex.: `ALERTA_SEM_SINAL_MIN=0.5`).
+
 O script percorre o trajeto calculado enviando posições no mesmo formato do OwnTracks, o que serve para apresentações e testes.
 
 ## 6. Testes automatizados
@@ -109,4 +119,5 @@ pytest
 | Motoboy não se move | Confira URL, modo HTTP e Tracker ID no OwnTracks. O log do servidor mostra `tid desconhecido` ou `descartada pelo filtro`. |
 | Erro 401 no OwnTracks | Senha diferente de `OWNTRACKS_TOKEN`. |
 | Porta 5000 ocupada | `python run.py --port 5050` (ajuste também o túnel). |
+| Alerta "sem sinal" com o motoboy rodando normalmente | O OwnTracks está em modo econômico. Use o modo **Move** e desative a otimização de bateria do Android para o app. |
 | Leituras descartadas com frequência | GPS com precisão ruim; aumente `GPS_PRECISAO_MAX_M` (ex.: 200). |
