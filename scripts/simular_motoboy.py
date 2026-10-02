@@ -6,6 +6,11 @@ o traçado calculado pelo OSRM (ou linha reta entre as paradas, se offline).
 Uso:
     python scripts/simular_motoboy.py --tid 0
     python scripts/simular_motoboy.py --tid 1 --url http://192.168.0.10:5000 --intervalo 2 --velocidade 35 --token segredo
+
+Demonstração dos alertas do painel:
+    python scripts/simular_motoboy.py --tid 0 --bateria 15          # bateria baixa
+    python scripts/simular_motoboy.py --tid 0 --parar-por 12        # parado 12 min no meio da rota
+    python scripts/simular_motoboy.py --tid 0 --cair-sinal          # para de enviar no meio da rota
 """
 
 import argparse
@@ -39,6 +44,11 @@ def main():
     parser.add_argument("--intervalo", type=float, default=2.0, help="segundos entre posições")
     parser.add_argument("--velocidade", type=float, default=40, help="velocidade simulada em km/h")
     parser.add_argument("--token", default="", help="OWNTRACKS_TOKEN, se configurado no servidor")
+    parser.add_argument("--bateria", type=int, default=85, help="bateria do celular informada (%%)")
+    parser.add_argument("--parar-por", type=float, default=0, metavar="MIN",
+                        help="fica parado MIN minutos no ponto --em do trajeto (alerta de parada)")
+    parser.add_argument("--cair-sinal", action="store_true", help="para de enviar no ponto --em (alerta de sem sinal)")
+    parser.add_argument("--em", type=float, default=0.4, help="fração do trajeto onde ocorre o evento (0 a 1)")
     args = parser.parse_args()
     mid = str(args.id if args.id is not None else args.tid)
 
@@ -55,12 +65,26 @@ def main():
     trajeto = interpolar(pontos, passo_m=args.velocidade / 3.6 * args.intervalo)
     auth = ("motoboy", args.token) if args.token else None
 
+    def enviar(lat, lon, vel):
+        msg = {"_type": "location", "tid": args.tid, "lat": lat, "lon": lon, "tst": int(time.time()),
+               "acc": 8, "vel": int(vel), "batt": args.bateria, "bs": 1}
+        requests.post(f"{args.url}/api/gps/owntracks", json=msg, auth=auth, timeout=5)
+
+    ponto_evento = int(len(trajeto) * min(max(args.em, 0), 1))
     print(f"Simulando {estado[mid]['nome']} com {len(trajeto)} posições ({calc['fonte']}). Ctrl+C para parar.")
     for i, (lat, lon) in enumerate(trajeto, 1):
-        msg = {"_type": "location", "tid": args.tid, "lat": lat, "lon": lon, "tst": int(time.time()), "acc": 8, "vel": int(args.velocidade)}
-        requests.post(f"{args.url}/api/gps/owntracks", json=msg, auth=auth, timeout=5)
+        if i == ponto_evento and args.cair_sinal:
+            print(f"\nSinal cortado na posição {i}. O painel deve alertar 'sem sinal' em alguns minutos.")
+            return
+        enviar(lat, lon, args.velocidade)
         print(f"\r{i}/{len(trajeto)}  {lat:.5f}, {lon:.5f}", end="", flush=True)
         time.sleep(args.intervalo)
+        if i == ponto_evento and args.parar_por > 0:
+            fim = time.time() + args.parar_por * 60
+            print(f"\nParado por {args.parar_por:g} min nesta posição...")
+            while time.time() < fim:
+                enviar(lat, lon, 0)
+                time.sleep(max(args.intervalo, 5))
     print("\nTrajeto concluído.")
 
 
