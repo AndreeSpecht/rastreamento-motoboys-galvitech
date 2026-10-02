@@ -26,7 +26,7 @@ const semanas = [
     evidencia: 'Release v0.8.0', status: 'Concluída' },
   { n: 9, data: '02/10/2026', fase: 'Rastreamento GPS', entrega: 'Alertas de status do motoboy: sinal perdido, parado por muito tempo e bateria baixa.',
     atividades: ['Detectar motoboy sem sinal (última posição antiga)', 'Alerta de parada prolongada fora de um cliente', 'Nível de bateria enviado pelo OwnTracks (campo batt)'],
-    evidencia: 'Milestone "Semana 09" no GitHub', status: 'Planejada' },
+    evidencia: 'alertas.py + issues #31–#33 fechadas', status: 'Concluída' },
   { n: 10, data: '09/10/2026', fase: 'Entregas', entrega: 'Confirmação de entrega por parada, com horário de chegada em cada cliente.',
     atividades: ['Marcar cada parada como entregue no painel', 'Registrar o horário de chegada por cliente', 'Histórico detalhado por parada'],
     evidencia: 'Milestone "Semana 10"', status: 'Planejada' },

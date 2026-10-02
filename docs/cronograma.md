@@ -28,7 +28,7 @@ Entregas **toda sexta-feira** do 8º período, semestre final (2026/2), de 07/08
 | 6 | 11/09/2026 | Rastreamento GPS | Tratamento dos dados de GPS, autenticação e simulador. | radar_tracker/frota.py, scripts/simular_motoboy.py | ✅ Concluída |
 | 7 | 18/09/2026 | Roteirização | Cálculo de rota via OSRM, modo offline e otimização por vizinho mais próximo. | radar_tracker/roteamento.py, geo.py | ✅ Concluída |
 | 8 | 25/09/2026 | Qualidade | Refatoração modular, testes automatizados, CI, documentação e cronograma. | Release v0.8.0 | ✅ Concluída |
-| 9 | 02/10/2026 | Rastreamento GPS | Alertas de status do motoboy: sinal perdido, parado por muito tempo e bateria baixa. | Milestone "Semana 09" no GitHub | 🔜 Planejada |
+| 9 | 02/10/2026 | Rastreamento GPS | Alertas de status do motoboy: sinal perdido, parado por muito tempo e bateria baixa. | alertas.py + issues #31–#33 fechadas | ✅ Concluída |
 | 10 | 09/10/2026 | Entregas | Confirmação de entrega por parada, com horário de chegada em cada cliente. | Milestone "Semana 10" | 🔜 Planejada |
 | 11 | 16/10/2026 | Relatórios | Indicadores de desempenho e melhorias no replay de trilha. | Milestone "Semana 11" | 🔜 Planejada |
 | 12 | 23/10/2026 | Segurança | Login de operador no painel e perfis de acesso. | Milestone "Semana 12" | 🔜 Planejada |
@@ -129,7 +129,7 @@ Entregas **toda sexta-feira** do 8º período, semestre final (2026/2), de 07/08
 - Alerta de parada prolongada fora de um cliente
 - Nível de bateria enviado pelo OwnTracks (campo batt)
 
-**Evidência:** Milestone "Semana 09" no GitHub · **Status:** Planejada
+**Evidência:** alertas.py + issues #31–#33 fechadas · **Status:** Concluída
 
 ### Semana 10 · 09/10/2026 · Entregas
 

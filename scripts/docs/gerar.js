@@ -8,6 +8,7 @@ const {
 const { semanas, marcos, riscos } = require('./dados');
 
 const SAIDA = process.argv[2];
+const ULTIMA = [...semanas].reverse().find((s) => s.status === 'Concluída');
 const REPO = 'https://github.com/AndreeSpecht/rastreamento-motoboys-galvitech';
 
 // Verificação: todas as datas precisam ser sextas-feiras
@@ -92,7 +93,7 @@ const capa = [
   new Paragraph({ alignment: AlignmentType.CENTER, children: [t('Entregas semanais às sextas-feiras · 07/08/2026 a 04/12/2026', { size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 600 }, children: [t('Autor: ', { bold: true, size: 22 }), t('André Gustavo Specht', { size: 22 })] }),
   new Paragraph({ alignment: AlignmentType.CENTER, children: [t('Professora: ', { bold: true, size: 22 }), t('Prof.ª Jessica Aline Karsten', { size: 22 })] }),
-  new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 600 }, children: [t('Jaraguá do Sul/SC · Versão do documento: 25/09/2026 (entrega da semana 8)', { size: 20, color: '595959' })] }),
+  new Paragraph({ alignment: AlignmentType.CENTER, spacing: { before: 600 }, children: [t(`Jaraguá do Sul/SC · Versão do documento: ${ULTIMA.data} (entrega da semana ${ULTIMA.n})`, { size: 20, color: '595959' })] }),
 ];
 
 // ---------- Corpo (retrato) ----------
@@ -164,12 +165,13 @@ semanas.forEach((s) => {
 });
 
 const situacao = [
-  h1('6. Situação atual (entrega da semana 8, versão 0.8.0)'),
+  h1(`6. Situação atual (entrega da semana ${ULTIMA.n}, ${ULTIMA.data})`),
   p('O repositório contém o sistema funcional, testado e documentado, pronto para rodar em qualquer computador com Python 3.10 ou superior:'),
   bullet([t('Código modular ', { bold: true }), t('no pacote radar_tracker (config, banco, frota, geo, roteamento, API e frontend).')]),
   bullet([t('Correções do protótipo: ', { bold: true }), t('rota duplicada, perda de nome/cor ao finalizar, XSS com nomes de clientes, busca sem codificação, filtro de datas inoperante e motoboys fixos no código.')]),
   bullet([t('Tratamento de GPS: ', { bold: true }), t('descarte por precisão, ordem temporal e saltos acima de 150 km/h.')]),
-  bullet([t('Qualidade: ', { bold: true }), t('29 testes automatizados e integração contínua em Windows e Ubuntu.')]),
+  bullet([t('Alertas de status (semana 9): ', { bold: true }), t('o painel avisa quando o motoboy fica sem sinal, parado mais de 10 min fora de um cliente ou com a bateria do celular abaixo de 20%.')]),
+  bullet([t('Qualidade: ', { bold: true }), t('43 testes automatizados e integração contínua em Windows e Ubuntu.')]),
   bullet([t('Portabilidade: ', { bold: true }), t('instalar.bat/iniciar.bat (Windows) e instalar.sh/iniciar.sh (Linux/macOS), simulador de motoboy e dados de demonstração.')]),
   bullet([t('Documentação: ', { bold: true }), t('README, requisitos, arquitetura, API, banco de dados, instalação e histórico de desenvolvimento em docs/.')]),
   h2('Como executar'),
