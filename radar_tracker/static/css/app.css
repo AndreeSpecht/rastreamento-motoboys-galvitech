@@ -59,6 +59,25 @@ li .rm { color: #c0392b; cursor: pointer; }
 input, select { padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 100%; box-sizing: border-box; }
 #inp-nota { border: 2px solid #f39c12; background: #fffbf0; font-weight: bold; text-align: center; margin-bottom: 5px; }
 
+/* Alertas (semana 9) */
+#alertas-box { margin: 10px 10px 0; border-radius: 6px; overflow: hidden; flex-shrink: 0; max-height: 140px; overflow-y: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.15); }
+.alerta-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; font-size: 0.82em; cursor: pointer; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.alerta-item:hover { filter: brightness(0.96); }
+.alerta-item b { white-space: nowrap; }
+.nivel-critico { background: #fdecea; color: #a61b1b; }
+.nivel-alerta { background: #fff1e0; color: #a35200; }
+.nivel-aviso { background: #fff9db; color: #7a6200; }
+.tab-item { position: relative; }
+.tab-badge { position: absolute; top: 4px; right: 4px; width: 9px; height: 9px; border-radius: 50%; border: 1px solid #fff; }
+.badge-critico { background: #e53935; animation: piscar 1s infinite; }
+.badge-alerta { background: #fb8c00; }
+.badge-aviso { background: #fbc02d; }
+.moto-icon-container.com-alerta-critico .moto-icon-svg { filter: drop-shadow(0 0 6px #e53935) drop-shadow(0 0 3px #e53935); animation: piscar 1s infinite; }
+.moto-icon-container.com-alerta-alerta .moto-icon-svg { filter: drop-shadow(0 0 6px #fb8c00) drop-shadow(0 0 3px #fb8c00); }
+.bateria-badge { display: inline-block; margin-top: 2px; background: #fff; color: #333; border-radius: 8px; padding: 0 5px; font-size: 9px; font-weight: 700; border: 1px solid #ccc; }
+.bateria-badge.baixa { background: #fbc02d; border-color: #c49000; }
+@keyframes piscar { 50% { opacity: 0.45; } }
+
 /* Popups do mapa */
 .popup-row { display: flex; gap: 5px; align-items: center; margin-top: 8px; }
 .btn-popup-add { background: #27ae60; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; flex-grow: 1; font-weight: bold; font-size: 0.9em; }

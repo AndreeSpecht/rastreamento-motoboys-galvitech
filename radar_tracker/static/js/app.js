@@ -49,13 +49,19 @@
   const camadaClientes = L.layerGroup().addTo(map);
   const camadaReplay = L.layerGroup().addTo(map);
 
-  function iconeMoto(cor, nome, vel) {
-    const velHtml = vel > 2 ? `<div class="speed-badge">⚡ ${Math.round(vel)} km/h</div>` : '';
+  function nivelMaisGrave(alertas) { return alertas && alertas.length ? alertas[0].nivel : null; }
+
+  function iconeMoto(m) {
+    const velHtml = m.velocidade > 2 ? `<div class="speed-badge">⚡ ${Math.round(m.velocidade)} km/h</div>` : '';
+    const bateriaBaixa = (m.alertas || []).some((a) => a.tipo === 'bateria_baixa');
+    const batHtml = m.bateria != null
+      ? `<div class="bateria-badge${bateriaBaixa ? ' baixa' : ''}">${m.carregando ? '⚡' : '🔋'} ${m.bateria}%</div>` : '';
+    const nivel = nivelMaisGrave(m.alertas);
     return L.divIcon({
-      className: 'moto-icon-container',
-      html: `<div class="moto-label" style="background:${esc(cor)}">${esc(nome.split(' ')[0])}</div>` +
-            `<i class="fas fa-motorcycle moto-icon-svg" style="color:${esc(cor)}"></i>${velHtml}`,
-      iconSize: [60, 70],
+      className: `moto-icon-container${nivel ? ` com-alerta-${nivel}` : ''}`,
+      html: `<div class="moto-label" style="background:${esc(m.cor)}">${esc(m.nome.split(' ')[0])}</div>` +
+            `<i class="fas fa-motorcycle moto-icon-svg" style="color:${esc(m.cor)}"></i>${velHtml}${batHtml}`,
+      iconSize: [60, 80],
       iconAnchor: [30, 35],
     });
   }
@@ -115,8 +121,9 @@
     api('/api/estado').then((estado) => {
       camadaMotos.clearLayers();
       Object.values(estado).forEach((m) => {
-        if (m.lat_atual) L.marker([m.lat_atual, m.lon_atual], { icon: iconeMoto(m.cor, m.nome, m.velocidade) }).addTo(camadaMotos);
+        if (m.lat_atual) L.marker([m.lat_atual, m.lon_atual], { icon: iconeMoto(m) }).addTo(camadaMotos);
       });
+      renderizarAlertas(estado);
 
       const info = estado[motoId];
       if (!info) return;
@@ -129,6 +136,34 @@
         desenharRota(info.rota, info.cor);
       }
     }).catch(() => { $('status-box').textContent = 'SEM CONEXÃO COM O SERVIDOR'; });
+  }
+
+  const ICONE_ALERTA = { sem_sinal: 'fa-signal', parado: 'fa-hourglass-half', bateria_baixa: 'fa-battery-quarter' };
+  const ORDEM_NIVEL = { critico: 0, alerta: 1, aviso: 2 };
+
+  function renderizarAlertas(estado) {
+    const box = $('alertas-box');
+    box.innerHTML = '';
+    const todos = [];
+    Object.entries(estado).forEach(([mid, m]) => {
+      const aba = $(`tab-${mid}`);
+      if (aba) {
+        aba.querySelectorAll('.tab-badge').forEach((b) => b.remove());
+        const nivel = nivelMaisGrave(m.alertas);
+        if (nivel) aba.append(el('span', { className: `tab-badge badge-${nivel}`, title: m.alertas.map((a) => a.mensagem).join(' · ') }));
+      }
+      (m.alertas || []).forEach((a) => todos.push({ ...a, mid: Number(mid), m }));
+    });
+    // Mais graves primeiro, considerando a frota inteira
+    todos.sort((a, b) => ORDEM_NIVEL[a.nivel] - ORDEM_NIVEL[b.nivel]);
+    todos.forEach((a) => {
+      box.append(el('div', {
+        className: `alerta-item nivel-${a.nivel}`,
+        title: 'Ver no mapa',
+        onclick: () => { mudarMoto(a.mid); map.setView([a.m.lat_atual, a.m.lon_atual], 16); },
+      }, el('i', { className: `fas ${ICONE_ALERTA[a.tipo] || 'fa-exclamation-triangle'}` }), el('b', {}, a.m.nome.split(' ')[0]), a.mensagem));
+    });
+    box.classList.toggle('hidden', todos.length === 0);
   }
 
   function renderizarParadas(info) {
@@ -145,7 +180,8 @@
   }
 
   function renderizarStatus(info) {
-    const vel = info.velocidade > 3 ? ` (${Math.round(info.velocidade)} km/h)` : '';
+    const vel = (info.velocidade > 3 ? ` (${Math.round(info.velocidade)} km/h)` : '') +
+      (info.bateria != null ? ` · ${info.carregando ? '⚡' : '🔋'}${info.bateria}%` : '');
     const livre = info.status === 'LIVRE';
     $('status-box').className = livre ? 'livre' : 'ocupado';
     $('status-box').textContent = livre ? `DISPONÍVEL${vel}` : `EM ROTA${vel} · Nota: ${info.nota}`;
