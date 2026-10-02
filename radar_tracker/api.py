@@ -10,7 +10,7 @@ from flask import Blueprint, abort, current_app, jsonify, render_template, reque
 from openpyxl import Workbook
 from openpyxl.styles import Font, PatternFill
 
-from . import roteamento
+from . import alertas, roteamento
 from .frota import MotoboyNaoEncontrado
 
 log = logging.getLogger(__name__)
@@ -76,9 +76,27 @@ def motoboys():
 
 
 # --- Frota / rota ---
+def _estado_com_alertas():
+    cfg = _cfg()
+    base = {"lat": cfg.BASE_LAT, "lon": cfg.BASE_LON}
+    return alertas.avaliar_frota(_frota().snapshot(), _banco().listar_clientes(), base, cfg)
+
+
 @bp.route("/api/estado")
 def estado():
-    return jsonify(_frota().snapshot())
+    return jsonify(_estado_com_alertas())
+
+
+@bp.route("/api/alertas")
+def lista_alertas():
+    """Alertas ativos de toda a frota, do mais grave para o mais leve."""
+    saida = [
+        {**a, "moto_id": int(mid), "motoboy": dados["nome"]}
+        for mid, dados in _estado_com_alertas().items()
+        for a in dados["alertas"]
+    ]
+    ordem = {nivel: i for i, nivel in enumerate(("critico", "alerta", "aviso"))}
+    return jsonify(sorted(saida, key=lambda a: ordem[a["nivel"]]))
 
 
 @bp.route("/api/add", methods=["POST"])
@@ -164,6 +182,13 @@ def gps_owntracks():
     if mid is None or lat is None or lon is None:
         log.info("OwnTracks: leitura ignorada (tid=%r).", d.get("tid"))
         return jsonify([])
+    # bs (battery status) do OwnTracks: 2 = carregando, 3 = carga completa (na tomada)
+    status_bateria = _numero(d.get("bs"))
+    frota.registrar_contato(
+        mid,
+        bateria=_numero(d.get("batt")),
+        carregando=None if status_bateria is None else status_bateria in (2, 3),
+    )
     ts = int(d.get("tst") or time.time())
     vel = frota.atualizar_posicao(mid, lat, lon, ts, precisao_m=_numero(d.get("acc")), vel_dispositivo=_numero(d.get("vel")))
     if vel is None:

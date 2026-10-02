@@ -68,6 +68,13 @@ class Config:
     GPS_PRECISAO_MAX_M = _env_float("GPS_PRECISAO_MAX_M", "100")
     GPS_VELOCIDADE_MAX_KMH = _env_float("GPS_VELOCIDADE_MAX_KMH", "150")
 
+    # Alertas de status (painel)
+    ALERTA_SEM_SINAL_MIN = _env_float("ALERTA_SEM_SINAL_MIN", "3")  # minutos sem mensagem durante a entrega
+    ALERTA_PARADO_MIN = _env_float("ALERTA_PARADO_MIN", "10")  # minutos parado fora de cliente
+    ALERTA_RAIO_PARADO_M = _env_float("ALERTA_RAIO_PARADO_M", "50")  # deslocamento que conta como "andou"
+    ALERTA_RAIO_CLIENTE_M = _env_float("ALERTA_RAIO_CLIENTE_M", "100")  # distância que conta como "no cliente"
+    ALERTA_BATERIA_MIN = _env_float("ALERTA_BATERIA_MIN", "20")  # % de bateria do celular
+
     # Persistência
     PASTA_DADOS = Path(_env("PASTA_DADOS", str(RAIZ_PROJETO / "data")))
     DB_PATH = Path(_env("DB_PATH", str(PASTA_DADOS / "radar.db")))

@@ -17,13 +17,15 @@ class MotoboyNaoEncontrado(KeyError):
 
 
 class Frota:
-    def __init__(self, motoboys, base_lat, base_lon, arquivo_sessao, precisao_max_m=100, velocidade_max_kmh=150):
+    def __init__(self, motoboys, base_lat, base_lon, arquivo_sessao, precisao_max_m=100, velocidade_max_kmh=150,
+                 raio_parado_m=50):
         self.motoboys = {m["id"]: m for m in motoboys}
         self.por_tid = {str(m["tid"]): m["id"] for m in motoboys}
         self.base = {"lat": base_lat, "lon": base_lon}
         self.arquivo_sessao = str(arquivo_sessao)
         self.precisao_max_m = precisao_max_m
         self.velocidade_max_kmh = velocidade_max_kmh
+        self.raio_parado_m = raio_parado_m
         self._lock = threading.RLock()
         self.estado = {mid: self._estado_inicial() for mid in self.motoboys}
 
@@ -37,6 +39,14 @@ class Frota:
             "lon_atual": self.base["lon"],
             "velocidade": 0,
             "last_ts": 0,
+            # Monitoramento (alertas)
+            "inicio_ts": 0,  # hora (servidor) em que saiu para a entrega
+            "recebido_em": 0,  # hora (servidor) da última mensagem do celular
+            "bateria": None,  # % informado pelo OwnTracks
+            "carregando": False,
+            "parado_desde": 0,  # início do período parado no mesmo lugar
+            "parado_lat": None,
+            "parado_lon": None,
         }
 
     # --- Persistência ---
@@ -118,7 +128,10 @@ class Frota:
             moto = self._moto(mid)
             if moto["status"] != LIVRE or not moto["rota"] or not nota:
                 return False
-            moto.update(status=EM_ROTA, nota=nota, hora_saida=datetime.now().strftime("%H:%M"))
+            agora = int(time.time())
+            moto.update(status=EM_ROTA, nota=nota, hora_saida=datetime.now().strftime("%H:%M"),
+                        inicio_ts=agora, parado_desde=agora,
+                        parado_lat=moto["lat_atual"], parado_lon=moto["lon_atual"])
         self.salvar()
         return True
 
@@ -136,11 +149,21 @@ class Frota:
                 "destinos": ", ".join(p["nome"] for p in moto["rota"]),
                 "nota": moto["nota"],
             }
-            moto.update(status=LIVRE, rota=[], nota="", hora_saida="")
+            moto.update(status=LIVRE, rota=[], nota="", hora_saida="", inicio_ts=0)
         self.salvar()
         return viagem
 
     # --- GPS ---
+    def registrar_contato(self, mid, bateria=None, carregando=None, agora=None):
+        """Marca que o celular se comunicou, mesmo que a posição venha a ser descartada."""
+        with self._lock:
+            moto = self._moto(mid)
+            moto["recebido_em"] = int(agora or time.time())
+            if bateria is not None:
+                moto["bateria"] = max(0, min(100, int(bateria)))
+            if carregando is not None:
+                moto["carregando"] = bool(carregando)
+
     def atualizar_posicao(self, mid, lat, lon, ts=None, precisao_m=None, vel_dispositivo=None):
         """Aplica uma leitura de GPS após filtrá-la.
 
@@ -166,5 +189,11 @@ class Frota:
             if vel is None or vel < 1:
                 vel = 0.0
             moto.update(lat_atual=lat, lon_atual=lon, velocidade=round(vel, 1), last_ts=ts)
+            self._atualizar_parado(moto, lat, lon, ts)
         self.salvar()
         return vel
+
+    def _atualizar_parado(self, moto, lat, lon, ts):
+        """Reinicia a contagem de "parado" quando o motoboy sai do raio do ponto de referência."""
+        if moto["parado_lat"] is None or geo.haversine(moto["parado_lat"], moto["parado_lon"], lat, lon) * 1000 > self.raio_parado_m:
+            moto.update(parado_desde=ts, parado_lat=lat, parado_lon=lon)

@@ -27,6 +27,7 @@ def create_app(config=None, motoboys=None):
         cfg.ARQUIVO_SESSAO,
         precisao_max_m=cfg.GPS_PRECISAO_MAX_M,
         velocidade_max_kmh=cfg.GPS_VELOCIDADE_MAX_KMH,
+        raio_parado_m=cfg.ALERTA_RAIO_PARADO_M,
     )
     frota.carregar()
 
